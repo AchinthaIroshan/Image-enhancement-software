@@ -39,7 +39,6 @@ namespace pes {
 			return out;
 		}
 
-
 		Mat Lib::Vignette(Mat im, int value)
 		{
 			CV_Assert(im.type() == CV_32FC3);
@@ -166,7 +165,7 @@ namespace pes {
 			return dst;
 		}
 
-		Mat Lib::shadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::ShadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
 		{
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
@@ -179,7 +178,7 @@ namespace pes {
 			return (input_image + alpha * tripleChannelAdder);
 		}
 
-		Mat Lib::highlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::HighlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
 		{
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
@@ -190,6 +189,16 @@ namespace pes {
 			Mat tripleChannelAdder;
 			cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
 			return (input_image + alpha * tripleChannelAdder);
+		}
+
+		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
+		{
+			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
+		}
+
+		Mat Lib::ContrastAdjustment(Mat src, double value)
+		{
+			return value * src;
 		}
 	}
 }

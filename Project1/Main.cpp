@@ -13,6 +13,9 @@ Mat globalInput;
 void GetSharpenImage(int value, void*);
 void shadowRecovery(int value, void*);
 void highlightRecovery(int value, void*);
+void Crop(int value, void*);
+void Contrast(int value, void*);
+
 
 //[System::STAThread]
 int main(int argc, char** argv)
@@ -22,7 +25,9 @@ int main(int argc, char** argv)
 	Application::Run(gcnew MainForm);*/
 
 	Mat image;
-	image = imread("../../im2.jpg", IMREAD_COLOR); // Read the file
+	image = imread("../../im3.jpg", IMREAD_COLOR); // Read the file
+
+	resize(image, image, cv::Size(400, 400));
 
 	if (!image.data) // Check for invalid input
 	{
@@ -40,6 +45,8 @@ int main(int argc, char** argv)
 	createTrackbar("GetSharpenImage"  , "input window", &slider, 200, GetSharpenImage);
 	createTrackbar("shadowRecovery"   , "input window", &slider, 200, shadowRecovery);
 	createTrackbar("highlightRecovery", "input window", &slider, 200, highlightRecovery);
+	createTrackbar("crop"			  , "input window", &slider, 200, Crop);
+	createTrackbar("Contrast"		  , "input window", &slider, 200, Contrast);
 
 	namedWindow("output window", WINDOW_AUTOSIZE); // Create a window for display.
 	imshow("output window", globalInput);
@@ -52,11 +59,23 @@ void GetSharpenImage(int value, void*)
 {
 	imshow("output window", Lib::GetSharpenImage(globalInput, ((value - 100) / 100.0), 0.1)); // Show our image inside it.
 }
+
 void shadowRecovery(int value, void*)
 {
-	imshow("output window", Lib::shadowRecovery(globalInput, ((value - 100) / 100.0))); // Show our image inside it.
+	imshow("output window", Lib::ShadowRecovery(globalInput, ((value - 100) / 100.0))); // Show our image inside it.
 }
+
 void highlightRecovery(int value, void*)
 {
-	imshow("output window", Lib::highlightRecovery(globalInput, ((value - 100) / 100.0))); // Show our image inside it.
+	imshow("output window", Lib::HighlightRecovery(globalInput, ((value - 100) / 100.0))); // Show our image inside it.
+}
+
+void Crop(int value, void*)
+{
+	imshow("output window", Lib::Crop(globalInput, cv::Point(20, 40), 200, 200)); // Show our image inside it.
+}
+
+void Contrast(int value, void*)
+{
+	imshow("output window", Lib::ContrastAdjustment(globalInput, (value)/100.0)); // Show our image inside it.
 }

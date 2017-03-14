@@ -24,8 +24,10 @@ namespace pes {
 			static Mat ColorBalance(Mat im, double r, double g, double b);
 			static Mat AutoCorrect(Mat im, double lim = 2, int sz = 30);
 			static Mat BrightnessAndContrastAuto(Mat src, double clipHistPercent = 0);
-			static Mat shadowRecovery(Mat input_image, double alpha);
-			static Mat highlightRecovery(Mat input_image, double alpha);
+			static Mat ShadowRecovery(Mat input_image, double alpha);
+			static Mat HighlightRecovery(Mat input_image, double alpha);
+			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
+			static Mat ContrastAdjustment(Mat src, double value);
 		private:
 			Lib();
 
