@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 {
 
 	Mat image;
-	image = imread("../../im4.jpg", IMREAD_COLOR); // Read the file
+	image = imread("../im1.jpg", IMREAD_COLOR); // Read the file
 
 	if (!image.data) // Check for invalid input
 	{
