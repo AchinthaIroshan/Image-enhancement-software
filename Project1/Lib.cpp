@@ -39,7 +39,6 @@ namespace pes {
 			return out;
 		}
 
-
 		Mat Lib::Vignette(Mat im, int value)
 		{
 			CV_Assert(im.type() == CV_32FC3);
@@ -164,6 +163,42 @@ namespace pes {
 				mixChannels(&src, 4, &dst, 1, from_to, 1);
 			}
 			return dst;
+		}
+
+		Mat Lib::ShadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		{
+			Mat modifier;
+			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
+			Mat thresholdedImageUp;
+			threshold(modifier, thresholdedImageUp, LOWER_SHADOW_LEVEL, 1.0, THRESH_TOZERO); // Treshold - up
+			Mat thresholdedImageDown;
+			threshold(thresholdedImageUp, thresholdedImageDown, UPPER_SHADOW_LEVEL, 1.0, THRESH_TOZERO_INV); // Treshold - down
+			Mat tripleChannelAdder;
+			cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+			return (input_image + alpha * tripleChannelAdder);
+		}
+
+		Mat Lib::HighlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		{
+			Mat modifier;
+			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
+			Mat thresholdedImageUp;
+			threshold(modifier, thresholdedImageUp, LOWER_HIGHLIGHT_LEVEL, 1.0, THRESH_TOZERO); // Treshold - up
+			Mat thresholdedImageDown;
+			threshold(thresholdedImageUp, thresholdedImageDown, UPPER_HIGHLIGHT_LEVEL, 1.0, THRESH_TOZERO_INV); // Treshold - down
+			Mat tripleChannelAdder;
+			cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+			return (input_image + alpha * tripleChannelAdder);
+		}
+
+		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
+		{
+			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
+		}
+
+		Mat Lib::ContrastAdjustment(Mat src, double value)
+		{
+			return value * src;
 		}
 	}
 }
