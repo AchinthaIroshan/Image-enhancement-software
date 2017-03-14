@@ -1,41 +1,66 @@
 #include "MainForm.h"
 #include <msclr\marshal_cppstd.h>
+#include <iostream>
 
 namespace pes {
 	namespace view {
 		using namespace cv;
 
-		System::Void MainForm::drawImage(Mat image)
+		Mat im;
+		Mat im2;
+
+		System::Void MainForm::DrawCvImage(const Mat cvImage)
 		{
-			System::Drawing::Graphics^ graphics = pictureBox->CreateGraphics();
-			System::IntPtr ptr(image.ptr());
-			System::Drawing::Bitmap^ b = gcnew System::Drawing::Bitmap(image.cols, image.rows, image.step, System::Drawing::Imaging::PixelFormat::Format24bppRgb, ptr);
-			System::Drawing::RectangleF rect(0, 0, pictureBox->Width, pictureBox->Height);
-			graphics->DrawImage(b, rect);
+			// only color images are supported
+			assert(cvImage.type() == CV_8UC3);
+
+			if ((pictureBox->Image == nullptr) || (pictureBox->Width != cvImage.cols) || (pictureBox->Height != cvImage.rows))
+			{
+				pictureBox->Width = cvImage.cols;
+				pictureBox->Height = cvImage.rows;
+				pictureBox->Image = gcnew System::Drawing::Bitmap(cvImage.cols, cvImage.rows);
+			}
+
+			// Create System::Drawing::Bitmap from cv::Mat
+			System::Drawing::Bitmap^ bmpImage = gcnew Bitmap(
+				cvImage.cols, cvImage.rows, cvImage.step,
+				System::Drawing::Imaging::PixelFormat::Format24bppRgb,
+				System::IntPtr(cvImage.data)
+			);
+
+			// Draw Bitmap over a PictureBox
+			Graphics^ g = Graphics::FromImage(pictureBox->Image);
+
+			g->DrawImage(bmpImage, 0, 0, cvImage.cols, cvImage.rows);
+			pictureBox->Refresh();
+
+			delete g;
 		}
 
 		System::Void MainForm::openButton_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
-			if(!im)
-			{
-				delete im;
-			}
 			if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 			{
-				Mat image = imread(msclr::interop::marshal_as<std::string>(openFileDialog->FileName), IMREAD_COLOR);
-				if (image.data) // Check for invalid input
-				{
-					im = &image;
-					namedWindow("input window", WINDOW_AUTOSIZE); // Create a window for display.
-					imshow("input window", image); // Show our image inside it.
-				}else
+				im = imread(msclr::interop::marshal_as<std::string>(openFileDialog->FileName), IMREAD_COLOR);
+				if (!im.data) // Check for invalid input
 				{
 					MessageBox::Show(this, "Cannot open or find the image!!", "Open Image - PES", MessageBoxButtons::OK, MessageBoxIcon::Error);
+					return System::Void();
 				}
 			}
-			if(im)
+			im2 = im.clone();
+			DrawCvImage(im);
+		}
+
+
+		System::Void MainForm::originalImageCheckBox_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if(originalImageCheckBox->Checked)
 			{
-				drawImage(*im);
+				DrawCvImage(im);
+			}else
+			{
+				DrawCvImage(im2);
 			}
 		}
 	}
