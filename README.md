@@ -19,4 +19,4 @@ This software tool does apply basic image processing techniques to a given image
 15. Giving an auto-adjust option
 16. Saving (e.g., as a jpg) using existing libraries
 
-As this project in written in C++, it uses OpenCV library for faster performance.
+As this project written in C++, it uses OpenCV library for faster performance.
