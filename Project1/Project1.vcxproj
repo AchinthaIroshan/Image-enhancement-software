@@ -42,6 +42,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
+    <CLRSupport>true</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -125,9 +126,42 @@
   <ItemGroup>
     <ClCompile Include="Lib.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MainForm.cpp">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </PrecompiledHeader>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</MinimalRebuild>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Default</BasicRuntimeChecks>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Async</ExceptionHandling>
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</CompileAsManaged>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </PrecompiledHeader>
+      <MinimalRebuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</MinimalRebuild>
+      <BasicRuntimeChecks Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Default</BasicRuntimeChecks>
+      <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Async</ExceptionHandling>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h" />
+    <ClInclude Include="MainForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System">
+      <HintPath>System.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.h</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
