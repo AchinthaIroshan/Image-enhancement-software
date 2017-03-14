@@ -15,6 +15,7 @@ void shadowRecovery(int value, void*);
 void highlightRecovery(int value, void*);
 void Crop(int value, void*);
 void Contrast(int value, void*);
+void SaturationAdjust(int value, void*);
 
 
 //[System::STAThread]
@@ -47,6 +48,7 @@ int main(int argc, char** argv)
 	createTrackbar("highlightRecovery", "input window", &slider, 200, highlightRecovery);
 	createTrackbar("crop"			  , "input window", &slider, 200, Crop);
 	createTrackbar("Contrast"		  , "input window", &slider, 200, Contrast);
+	createTrackbar("colour saturation", "input window", &slider, 200, SaturationAdjust);
 
 	namedWindow("output window", WINDOW_AUTOSIZE); // Create a window for display.
 	imshow("output window", globalInput);
@@ -78,4 +80,9 @@ void Crop(int value, void*)
 void Contrast(int value, void*)
 {
 	imshow("output window", Lib::ContrastAdjustment(globalInput, (value)/100.0)); // Show our image inside it.
+}
+
+void SaturationAdjust(int value, void*)
+{
+	imshow("output window", Lib::SaturationAdjustment(globalInput, (value-100) / 100.0)); // Show our image inside it.
 }
