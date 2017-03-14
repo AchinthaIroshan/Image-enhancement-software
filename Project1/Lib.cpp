@@ -1,6 +1,5 @@
 #include "Lib.h"
 
-
 library::Lib::Lib()
 {
 }
@@ -9,6 +8,33 @@ library::Lib::Lib()
 library::Lib::~Lib()
 {
 }
+
+cv::Mat library::Lib::shadowRecovery(Mat src, double alpha)  
+{
+	cv::Mat modifier;
+	cv::cvtColor(src, modifier, CV_BGR2GRAY); 
+	cv::Mat thresholdedImageUp;
+	cv::threshold(modifier, thresholdedImageUp, LOWER_SHADOW_LEVEL, 1.0, cv::THRESH_TOZERO);
+	cv::Mat thresholdedImageDown;
+	threshold(thresholdedImageUp, thresholdedImageDown, UPPER_SHADOW_LEVEL, 1.0, cv::THRESH_TOZERO_INV); 																								
+	cv::Mat tripleChannelAdder;
+	cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+	return (src + alpha * tripleChannelAdder);
+}
+
+cv::Mat library::Lib::highlightRecovery(cv::Mat src, double alpha) 
+{
+	cv::Mat modifier;
+	cvtColor(src, modifier, CV_BGR2GRAY);
+	cv::Mat thresholdedImageUp;
+	threshold(modifier, thresholdedImageUp, LOWER_HIGHLIGHT_LEVEL, 1.0, cv::THRESH_TOZERO);
+	cv::Mat thresholdedImageDown;
+	threshold(thresholdedImageUp, thresholdedImageDown, UPPER_HIGHLIGHT_LEVEL, 1.0, cv::THRESH_TOZERO_INV);
+	cv::Mat tripleChannelAdder;
+	cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+	return (src + alpha * tripleChannelAdder);
+}
+
 
 cv::Mat library::Lib::GetSharpenImage(Mat im, float value, float sigma)
 {
