@@ -4,8 +4,16 @@
 #include <iostream>
 #include <filesystem>
 
+#define UPPER_SHADOW_LEVEL 0.24
+#define LOWER_SHADOW_LEVEL 0.05
+#define UPPER_HIGHLIGHT_LEVEL 0.9999
+#define LOWER_HIGHLIGHT_LEVEL 0.6500
+
 using namespace cv;
 using namespace std;
+
+Mat globalInput;
+
 
 Mat GetSharpenImage(Mat im, float value, float sigma);
 Mat AdjustTemperature(Mat im, double value);
@@ -13,28 +21,73 @@ Mat Vignette(Mat im, int value=200);
 Mat ColorBalance(Mat im, double r, double g, double b);
 Mat AutoCorrect(Mat im, double lim=2, int sz=30);
 Mat BrightnessAndContrastAuto(Mat src, double clipHistPercent = 0);
+Mat shadowRecovery(Mat input_image, double alpha);
+Mat highlightRecovery(Mat input_image, double alpha);
+void generateOutput(int, void*);
 
 int main(int argc, char** argv)
 {
-
 	Mat image;
-	image = imread("../../im1.jpg", IMREAD_COLOR); // Read the file
+	image = imread("im2.JPG", IMREAD_COLOR); // Read the file
 
+	
 	if (!image.data) // Check for invalid input
 	{
 		cout << "Could not open or find the image" << std::endl;
 		return -1;
 	}
-	//image.convertTo(image, CV_32FC3, 1/255.0);
+
+	//cout << "Image loading completed. Enter alpha value: "; double alpha; cin >> alpha;
+
+	image.convertTo(image, CV_32FC3, 1/255.0);
+	globalInput = image;
+	int slider = 100;
 
 	namedWindow("input window", WINDOW_AUTOSIZE); // Create a window for display.
+	createTrackbar("lever", "input window", &slider, 200, generateOutput);
 	imshow("input window", image); // Show our image inside it.
 
 	namedWindow("output window", WINDOW_AUTOSIZE); // Create a window for display.
-	imshow("output window", BrightnessAndContrastAuto(image, 1)); // Show our image inside it.
-
+	
 	waitKey(0); // Wait for a keystroke in the window
 	return 0;
+}
+
+void generateOutput(int value, void*)
+{
+	imshow("output window", shadowRecovery(globalInput, ((value - 100)/100.0))); // Show our image inside it.
+}
+
+Mat shadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+{
+	//cout << "Alpha: " << alpha << endl;
+	Mat modifier;
+	cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
+	Mat thresholdedImageUp;
+	threshold(modifier, thresholdedImageUp, LOWER_SHADOW_LEVEL, 1.0, THRESH_TOZERO); // Treshold - up
+	Mat thresholdedImageDown;
+	threshold(thresholdedImageUp, thresholdedImageDown, UPPER_SHADOW_LEVEL, 1.0, THRESH_TOZERO_INV); // Treshold - down
+	//imshow("tt", thresholdedImageDown); waitKey(0);
+	Mat tripleChannelAdder;
+	cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+	//imshow("temp", input_image + alpha * tripleChannelAdder); cin.get();
+	return (input_image + alpha * tripleChannelAdder);
+}
+
+Mat highlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+{
+	//cout << "Alpha: " << alpha << endl;
+	Mat modifier;
+	cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
+	Mat thresholdedImageUp;
+	threshold(modifier, thresholdedImageUp, LOWER_HIGHLIGHT_LEVEL, 1.0, THRESH_TOZERO); // Treshold - up
+	Mat thresholdedImageDown;
+	threshold(thresholdedImageUp, thresholdedImageDown, UPPER_HIGHLIGHT_LEVEL, 1.0, THRESH_TOZERO_INV); // Treshold - down
+																									 //imshow("tt", thresholdedImageDown); waitKey(0);
+	Mat tripleChannelAdder;
+	cvtColor(thresholdedImageDown, tripleChannelAdder, CV_GRAY2BGR);
+	//imshow("temp", input_image + alpha * tripleChannelAdder); cin.get();
+	return (input_image + alpha * tripleChannelAdder);
 }
 
 Mat GetSharpenImage(Mat im, float value, float sigma)
