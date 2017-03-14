@@ -9,8 +9,11 @@ using namespace pes::library;
 using namespace pes::view;
 
 
+[System::STAThread]
 int main(int argc, char** argv)
 {
+	Application::EnableVisualStyles();
+	Application::DoEvents();
 	Application::Run(gcnew MainForm);
 
 	/*Mat image;
