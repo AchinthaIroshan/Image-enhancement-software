@@ -124,6 +124,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ControllerModel.cpp" />
+    <ClCompile Include="FilterModel.cpp" />
     <ClCompile Include="Lib.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MainForm.cpp">
@@ -144,6 +146,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ControllerModel.h" />
+    <ClInclude Include="FilterModel.h" />
     <ClInclude Include="Lib.h" />
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>

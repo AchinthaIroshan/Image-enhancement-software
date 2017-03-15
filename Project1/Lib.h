@@ -27,10 +27,17 @@ namespace pes {
 			static Mat BrightnessAndContrastAuto(Mat src, double clipHistPercent = 1.5);
 			static Mat ShadowRecovery(Mat input_image, int alpha);
 			static Mat HighlightRecovery(Mat input_image, int alpha);
-			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
 			static Mat ContrastAdjustment(Mat src, int value);
 			static Mat SaturationAdjustment(Mat src, int value);
 			static Mat ExposureAdjustment(Mat src, int value);
+
+			static Mat histogram(Mat src);
+			static Mat noiseRed_NormalizedFilter(Mat src, int KernalSize);
+			static Mat noiseRed_GaussianFilter(Mat src, int KernalSize);
+			static Mat noiseRed_MedianFilter(Mat src, int KernalSize);
+			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
+			static Mat *colourHistogram(Mat src);
+			static Mat rgbHistogram(Mat src);
 		private:
 			Lib();
 

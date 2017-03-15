@@ -234,6 +234,109 @@ namespace pes {
 			return reconstructed_Image;
 		}
 
+
+		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			blur(src, dst, Size(i, i), Point(-1, -1));
+			return dst;
+		}
+
+		Mat Lib::noiseRed_GaussianFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			GaussianBlur(src, dst, Size(i, i), 0, 0);
+			//sigma x and y : Writing 0 implies that sigma x and y is calculated using kernel size
+			return dst;
+		}
+
+		Mat Lib::noiseRed_MedianFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			medianBlur(src, dst, i);
+			return dst;
+		}
+
+		Mat Lib::noiseRed_bilateralFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			bilateralFilter(src, dst, i, i * 2, i / 2);
+			return dst;
+		}
+
+
+		
+		Mat *Lib::colourHistogram(Mat src) {
+			Mat bgr[3];
+			Mat blue, green, red;
+
+			split(src, bgr);
+
+			blue = bgr[0];
+			green = bgr[1];
+			red = bgr[2];
+
+
+			Mat bhist = Lib::histogram(blue);
+			Mat ghist = Lib::histogram(green);
+			Mat rhist = Lib::histogram(red);
+
+			Mat hist[3] = { bhist ,ghist ,rhist };
+
+			return hist;
+
+		}
+		Mat Lib::histogram(Mat src) {
+			int histogram[256] = { 0 };
+
+			for (int y = 0; y < src.rows; y++) {
+				for (int x = 0; x < src.cols; x++) {
+					histogram[(int)src.at<uchar>(y, x)]++;
+				}
+			}
+
+			for (int i = 0; i < 255; i++) {
+				cout << histogram[i] << endl;
+			}
+
+			int hist_wd = 512;
+			int hist_ht = 400;
+
+			int bin_wd = cvRound((double)hist_wd / 256);
+
+			Mat histIm(hist_ht, hist_wd, CV_8UC1, Scalar(255, 255, 255));
+
+			int max = histogram[0];
+
+			for (int i = 0; i<255; i++) {
+				if (histogram[i] > max) {
+					max = histogram[i];
+				}
+			}
+
+			//normalize the histogrm values from 0 to number of rows
+
+			for (int i = 0; i<255; i++) {
+				histogram[i] = ((double)histogram[i] / max)*src.rows;
+			}
+
+			for (int i = 0; i < 255; i++) {
+				line(histIm, Point(bin_wd*(i), hist_ht), Point(bin_wd*(i), hist_ht - histogram[i]), Scalar(0, 0, 0));
+			}
+
+			return histIm;
+
+
+		}
+
+		Mat Lib::rgbHistogram(Mat src) {
+
+			Mat gryScale;
+			cvtColor(src, gryScale, CV_RGB2GRAY);
+			Mat hist = Lib::histogram(gryScale);
+			return hist;
+		}
+
 		Mat Lib::ExposureAdjustment(Mat src, int value_in) // 0 <= value_in <= 100
 		{
 			double value = (value_in) / 100.0;
