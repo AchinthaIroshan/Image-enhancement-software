@@ -73,6 +73,9 @@ namespace pes {
 			}else if(bRadioButton->Checked)
 			{
 				cvImage = Lib::blueHistogram(im_);
+			}else if(rgbRadioButton->Checked)
+			{
+				cvImage = Lib::rgbHistogram(im_);
 			}
 			resize(cvImage, cvImage, cv::Size(760, 230));
 			if ((histPictureBox->Image == nullptr) || (histPictureBox->Width != cvImage.cols) || (histPictureBox->Height != cvImage.rows))
@@ -148,6 +151,7 @@ namespace pes {
 		{
 			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark) {
 				cropStart = e->Location;
+				cout << msclr::interop::marshal_as<std::string>(cropStart->ToString()) << " :A" << endl;
 				currentMouse = e->Location;
 				isDragging = true;
 			}
@@ -167,6 +171,7 @@ namespace pes {
 		{
 			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark && isDragging) {
 				currentMouse = e->Location;
+				cout << msclr::interop::marshal_as<std::string>(currentMouse->ToString()) << " :B" << endl;
 				pictureBox->Invalidate();
 				pictureBox->Update();
 			}

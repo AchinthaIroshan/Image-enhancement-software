@@ -202,7 +202,7 @@ namespace pes {
 
 		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
 		{
-			if (_height > src.rows)
+/*			if (_height > src.rows)
 			{
 				_height = src.rows;
 			}
@@ -210,7 +210,7 @@ namespace pes {
 			if (_width > src.cols)
 			{
 				_width = src.cols;
-			}
+			}*/
 
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
@@ -291,6 +291,7 @@ namespace pes {
 			return hist;
 
 		}
+
 		Mat Lib::histogram(Mat src) {
 			int histogram[256] = { 0 };
 
@@ -298,10 +299,6 @@ namespace pes {
 				for (int x = 0; x < src.cols; x++) {
 					histogram[(int)src.at<uchar>(y, x)]++;
 				}
-			}
-
-			for (int i = 0; i < 255; i++) {
-				cout << histogram[i] << endl;
 			}
 
 			int hist_wd = 512;
