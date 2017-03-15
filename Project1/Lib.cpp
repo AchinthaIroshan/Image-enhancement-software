@@ -12,8 +12,9 @@ namespace pes {
 		{
 		}
 
-		Mat Lib::GetSharpenImage(Mat im, float value, float sigma)
+		Mat Lib::GetSharpenImage(Mat im, int value_in, float sigma) // -100 <= value_in <=100
 		{
+			double value = (value_in - 100) / 50.0;
 			CV_Assert(im.type() == CV_32FC3);
 			Mat out;
 			GaussianBlur(im, out, Size(0, 0), sigma, sigma);
@@ -21,8 +22,9 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AdjustTemperature(Mat im, double value)
+		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
+			double value = (value_in + 100) / 100.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
@@ -39,8 +41,10 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::Vignette(Mat im, int value)
+		Mat Lib::Vignette(Mat im_in, int value_in) // 0 <= value_in <=100
 		{
+			Mat im = im_in;
+			int value = 1200 - 10 * value_in;
 			CV_Assert(im.type() == CV_32FC3);
 			auto kernel_x = getGaussianKernel(im.cols, value, CV_32FC1);
 			transpose(kernel_x, kernel_x);
@@ -60,8 +64,9 @@ namespace pes {
 			return im;
 		}
 
-		Mat Lib::ColorBalance(Mat im, double r, double g, double b)
+		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // 0 <= value_in <=100
 		{
+			double r = r_in / 100.0, g = g_in / 100.0, b = b_in / 100.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(r >= 0 && r <= 1);
 			CV_Assert(g >= 0 && g <= 1);
@@ -81,8 +86,10 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AutoCorrect(Mat im, double lim, int sz)
+		/*Mat Lib::AutoCorrect(Mat im, int lim_in, int sz_in)
 		{
+			double lim;
+			int sz;
 			CV_Assert(im.type() == CV_8UC3);
 			Mat out;
 			Mat ch[3];
@@ -94,7 +101,7 @@ namespace pes {
 			}
 			merge(ch, 3, out);
 			return out;
-		}
+		}*/
 
 		Mat Lib::BrightnessAndContrastAuto(Mat src, double clipHistPercent)
 		{
@@ -165,8 +172,9 @@ namespace pes {
 			return dst;
 		}
 
-		Mat Lib::ShadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::ShadowRecovery(Mat input_image, int value_in) // - 100 <= value_in <= 100
 		{
+			double alpha = (value_in ) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -178,8 +186,9 @@ namespace pes {
 			return (input_image + alpha * tripleChannelAdder);
 		}
 
-		Mat Lib::HighlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::HighlightRecovery(Mat input_image, int value_in)  // - 100 <= value_in <= 100
 		{
+			double alpha = (value_in ) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -206,13 +215,14 @@ namespace pes {
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
 
-		Mat Lib::ContrastAdjustment(Mat src, double value)
+		Mat Lib::ContrastAdjustment(Mat src, int value_in) // -100 <= value_in <= 100
 		{
-			return value * src;
+			return ((value_in + 100 ) / 100.0) * src;
 		}
 
-		Mat Lib::SaturationAdjustment(Mat src, double value)
+		Mat Lib::SaturationAdjustment(Mat src, int value_in) // - 100 <= value_in <= 100
 		{
+			double value = (value_in) / 100.0;
 			cv::Mat HSV_Image;
 			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
 			vector<Mat> channels(3); 
@@ -221,6 +231,20 @@ namespace pes {
 			cv::Mat reconstructed_Image;
 			cv::merge(channels, reconstructed_Image);
 			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HSV2BGR);
+			return reconstructed_Image;
+		}
+
+		Mat Lib::ExposureAdjustment(Mat src, int value_in) // 0 <= value_in <= 100
+		{
+			double value = (value_in) / 100.0;
+			cv::Mat HLS_Image;
+			cv::cvtColor(src, HLS_Image, CV_BGR2HLS);
+			vector<Mat> channels(3);
+			cv::split(HLS_Image, channels);
+			channels.at(1) = channels.at(1) * pow(2, value);
+			cv::Mat reconstructed_Image;
+			cv::merge(channels, reconstructed_Image);
+			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HLS2BGR);
 			return reconstructed_Image;
 		}
 	}
