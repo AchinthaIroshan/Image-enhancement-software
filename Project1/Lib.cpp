@@ -21,19 +21,19 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AdjustTemperature(Mat im, int value)
+		Mat Lib::AdjustTemperature(Mat im, double value)
 		{
 			CV_Assert(im.type() == CV_32FC3);
-			double val = value/100.0 + 1.0;
+			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
 			Mat ch[3];
 			split(im, ch);
-			pow(ch[0], val, ch[0]);
-			pow(ch[2], 2 - val, ch[2]);
+			pow(ch[0], value, ch[0]);
+			pow(ch[2], 2 - value, ch[2]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_BGR2HSV);
 			split(out, ch);
-			pow(ch[1], val, ch[1]);
+			pow(ch[1], value, ch[1]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_HSV2BGR);
 			return out;
@@ -224,6 +224,58 @@ namespace pes {
 			return reconstructed_Image;
 		}
 
+
+		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			blur(src, dst, Size(i, i), Point(-1, -1));
+			return dst;
+		}
+
+		Mat Lib::noiseRed_GaussianFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			GaussianBlur(src, dst, Size(i, i), 0, 0);
+			//sigma x and y : Writing 0 implies that sigma x and y is calculated using kernel size
+			return dst;
+		}
+
+		Mat Lib::noiseRed_MedianFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			medianBlur(src, dst, i);
+			return dst;
+		}
+
+		Mat Lib::noiseRed_bilateralFilter(Mat src, int KernalSize) {
+			Mat dst;
+			int i = KernalSize;
+			bilateralFilter(src, dst, i, i * 2, i / 2);
+			return dst;
+		}
+
+
+		
+		Mat *Lib::colourHistogram(Mat src) {
+			Mat bgr[3];
+			Mat blue, green, red;
+
+			split(src, bgr);
+
+			blue = bgr[0];
+			green = bgr[1];
+			red = bgr[2];
+
+
+			Mat bhist = Lib::histogram(blue);
+			Mat ghist = Lib::histogram(green);
+			Mat rhist = Lib::histogram(red);
+
+			Mat hist[3] = { bhist ,ghist ,rhist };
+
+			return hist;
+
+		}
 		Mat Lib::histogram(Mat src) {
 			int histogram[256] = { 0 };
 
@@ -266,54 +318,13 @@ namespace pes {
 
 
 		}
-		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
-			Mat dst;
-			int i = KernalSize;
-			blur(src, dst, Size(i, i), Point(-1, -1));
-			return dst;
-		}
 
-		Mat Lib::noiseRed_GaussianFilter(Mat src, int KernalSize) {
-			Mat dst;
-			int i = KernalSize;
-			GaussianBlur(src, dst, Size(i, i), 0, 0);
-			//sigma x and y : Writing 0 implies that sigma x and y is calculated using kernel size
-			return dst;
-		}
+		Mat Lib::rgbHistogram(Mat src) {
 
-		Mat Lib::noiseRed_MedianFilter(Mat src, int KernalSize) {
-			Mat dst;
-			int i = KernalSize;
-			medianBlur(src, dst, i);
-			return dst;
-		}
-
-		Mat Lib::noiseRed_bilateralFilter(Mat src, int KernalSize) {
-			Mat dst;
-			int i = KernalSize;
-			bilateralFilter(src, dst, i, i * 2, i / 2);
-			return dst;
-		}
-		
-		Mat *Lib::colourHistogram(Mat src) {
-			Mat bgr[3];
-			Mat blue, green, red;
-
-			split(src, bgr);
-
-			blue = bgr[0];
-			green = bgr[1];
-			red = bgr[2];
-
-
-			Mat bhist = Lib::histogram(blue);
-			Mat ghist = Lib::histogram(green);
-			Mat rhist = Lib::histogram(red);
-
-			Mat hist[3] = { bhist ,ghist ,rhist };
-
+			Mat gryScale;
+			cvtColor(src, gryScale, CV_RGB2GRAY);
+			Mat hist = Lib::histogram(gryScale);
 			return hist;
-
 		}
 	}
 }

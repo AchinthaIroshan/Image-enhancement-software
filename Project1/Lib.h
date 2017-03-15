@@ -20,7 +20,7 @@ namespace pes {
 		public:
 			~Lib();
 			static Mat GetSharpenImage(Mat im, float value, float sigma);
-			static Mat AdjustTemperature(Mat im, int value);
+			static Mat AdjustTemperature(Mat im, double value);
 			static Mat Vignette(Mat im, int value = 200);
 			static Mat ColorBalance(Mat im, double r, double g, double b);
 			static Mat AutoCorrect(Mat im, double lim = 2, int sz = 30);
@@ -36,6 +36,7 @@ namespace pes {
 			static Mat noiseRed_MedianFilter(Mat src, int KernalSize);
 			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
 			static Mat *colourHistogram(Mat src);
+			static Mat rgbHistogram(Mat src);
 		private:
 			Lib();
 
