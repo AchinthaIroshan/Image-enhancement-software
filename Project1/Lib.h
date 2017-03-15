@@ -30,6 +30,12 @@ namespace pes {
 			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
 			static Mat ContrastAdjustment(Mat src, double value);
 			static Mat SaturationAdjustment(Mat src, double value);
+			static Mat histogram(Mat src);
+			static Mat noiseRed_NormalizedFilter(Mat src, int KernalSize);
+			static Mat noiseRed_GaussianFilter(Mat src, int KernalSize);
+			static Mat noiseRed_MedianFilter(Mat src, int KernalSize);
+			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
+			static Mat *colourHistogram(Mat src);
 		private:
 			Lib();
 
