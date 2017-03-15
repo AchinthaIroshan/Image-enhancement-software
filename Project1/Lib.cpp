@@ -21,19 +21,19 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AdjustTemperature(Mat im, double value)
+		Mat Lib::AdjustTemperature(Mat im, int value)
 		{
 			CV_Assert(im.type() == CV_32FC3);
-			CV_Assert(value >= 0 && value <= 2);
+			double val = value/100.0 + 1.0;
 			Mat out;
 			Mat ch[3];
 			split(im, ch);
-			pow(ch[0], value, ch[0]);
-			pow(ch[2], 2 - value, ch[2]);
+			pow(ch[0], val, ch[0]);
+			pow(ch[2], 2 - val, ch[2]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_BGR2HSV);
 			split(out, ch);
-			pow(ch[1], value, ch[1]);
+			pow(ch[1], val, ch[1]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_HSV2BGR);
 			return out;

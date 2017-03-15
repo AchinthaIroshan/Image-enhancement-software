@@ -3,6 +3,8 @@
 namespace pes {
 	namespace model {
 
+		using namespace System;
+
 		public ref class ControllerModel
 		{
 
@@ -27,6 +29,9 @@ namespace pes {
 				System::Windows::Forms::TrackBar^ label1TrackerBar,
 				System::Windows::Forms::TrackBar^ label2TrackerBar,
 				System::Windows::Forms::TrackBar^ label3TrackerBar);
+
+			System::Void HideAll();
+			System::Void Visible(int no);
 		};
 
 	}

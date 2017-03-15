@@ -3,6 +3,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include "ControllerModel.h"
+#include "FilterModel.h"
 
 namespace pes {
 	namespace view {
@@ -75,9 +76,15 @@ namespace pes {
 		private: bool isDragging = false;
 		private: System::Drawing::Point^ cropStart;
 		private: System::Drawing::Point^ currentMouse;
+		private: pes::model::FilterModel^ selectedModel;
 		private: System::Windows::Forms::ToolStripMenuItem^  cropImageToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  savePresetToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  loadPresetToolStripMenuItem;
+		private: System::Windows::Forms::PictureBox^  pictureBox1;
+		private: System::Windows::Forms::RadioButton^  bRadioButton;
+		private: System::Windows::Forms::RadioButton^  gRadioButton;
+		private: System::Windows::Forms::RadioButton^  rRadioButton;
+		private: System::Windows::Forms::RadioButton^  rgbRadioButton;
 
 
 		protected:
@@ -124,10 +131,16 @@ namespace pes {
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
+				this->rgbRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->rRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->gRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->bRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 				this->splitContainer1->Panel1->SuspendLayout();
+				this->splitContainer1->Panel2->SuspendLayout();
 				this->splitContainer1->SuspendLayout();
 				this->groupBox2->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->label3TrackBar))->BeginInit();
@@ -136,13 +149,14 @@ namespace pes {
 				this->panel2->SuspendLayout();
 				this->menuStrip1->SuspendLayout();
 				this->panel1->SuspendLayout();
+				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 				this->SuspendLayout();
 				// 
 				// pictureBox
 				// 
 				this->pictureBox->Anchor = System::Windows::Forms::AnchorStyles::None;
 				this->pictureBox->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
-				this->pictureBox->Location = System::Drawing::Point(60, 56);
+				this->pictureBox->Location = System::Drawing::Point(60, 20);
 				this->pictureBox->Name = L"pictureBox";
 				this->pictureBox->Size = System::Drawing::Size(807, 540);
 				this->pictureBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
@@ -174,8 +188,16 @@ namespace pes {
 				// 
 				this->splitContainer1->Panel1->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
 				this->splitContainer1->Panel1->Controls->Add(this->pictureBox);
+				// 
+				// splitContainer1.Panel2
+				// 
+				this->splitContainer1->Panel2->Controls->Add(this->pictureBox1);
+				this->splitContainer1->Panel2->Controls->Add(this->bRadioButton);
+				this->splitContainer1->Panel2->Controls->Add(this->gRadioButton);
+				this->splitContainer1->Panel2->Controls->Add(this->rRadioButton);
+				this->splitContainer1->Panel2->Controls->Add(this->rgbRadioButton);
 				this->splitContainer1->Size = System::Drawing::Size(867, 777);
-				this->splitContainer1->SplitterDistance = 596;
+				this->splitContainer1->SplitterDistance = 524;
 				this->splitContainer1->TabIndex = 2;
 				// 
 				// originalImageCheckBox
@@ -236,6 +258,7 @@ namespace pes {
 				this->label3TrackBar->Size = System::Drawing::Size(457, 45);
 				this->label3TrackBar->TabIndex = 16;
 				this->label3TrackBar->Visible = false;
+				this->label3TrackBar->Scroll += gcnew System::EventHandler(this, &MainForm::label3TrackBar_Scroll);
 				// 
 				// infoLabel2
 				// 
@@ -274,6 +297,7 @@ namespace pes {
 				this->label2TrackBar->Size = System::Drawing::Size(457, 45);
 				this->label2TrackBar->TabIndex = 11;
 				this->label2TrackBar->Visible = false;
+				this->label2TrackBar->Scroll += gcnew System::EventHandler(this, &MainForm::label2TrackBar_Scroll);
 				// 
 				// label1TrackBar
 				// 
@@ -282,6 +306,7 @@ namespace pes {
 				this->label1TrackBar->Size = System::Drawing::Size(457, 45);
 				this->label1TrackBar->TabIndex = 10;
 				this->label1TrackBar->Visible = false;
+				this->label1TrackBar->Scroll += gcnew System::EventHandler(this, &MainForm::label1TrackBar_Scroll);
 				// 
 				// label2
 				// 
@@ -405,6 +430,59 @@ namespace pes {
 				this->saveFileDialog->InitialDirectory = L"./";
 				this->saveFileDialog->Title = L"Save Image";
 				// 
+				// rgbRadioButton
+				// 
+				this->rgbRadioButton->AutoSize = true;
+				this->rgbRadioButton->Location = System::Drawing::Point(14, 15);
+				this->rgbRadioButton->Name = L"rgbRadioButton";
+				this->rgbRadioButton->Size = System::Drawing::Size(48, 17);
+				this->rgbRadioButton->TabIndex = 0;
+				this->rgbRadioButton->TabStop = true;
+				this->rgbRadioButton->Text = L"RGB";
+				this->rgbRadioButton->UseVisualStyleBackColor = true;
+				// 
+				// rRadioButton
+				// 
+				this->rRadioButton->AutoSize = true;
+				this->rRadioButton->Location = System::Drawing::Point(14, 38);
+				this->rRadioButton->Name = L"rRadioButton";
+				this->rRadioButton->Size = System::Drawing::Size(45, 17);
+				this->rRadioButton->TabIndex = 1;
+				this->rRadioButton->TabStop = true;
+				this->rRadioButton->Text = L"Red";
+				this->rRadioButton->UseVisualStyleBackColor = true;
+				// 
+				// gRadioButton
+				// 
+				this->gRadioButton->AutoSize = true;
+				this->gRadioButton->Location = System::Drawing::Point(14, 61);
+				this->gRadioButton->Name = L"gRadioButton";
+				this->gRadioButton->Size = System::Drawing::Size(54, 17);
+				this->gRadioButton->TabIndex = 2;
+				this->gRadioButton->TabStop = true;
+				this->gRadioButton->Text = L"Green";
+				this->gRadioButton->UseVisualStyleBackColor = true;
+				// 
+				// bRadioButton
+				// 
+				this->bRadioButton->AutoSize = true;
+				this->bRadioButton->Location = System::Drawing::Point(14, 84);
+				this->bRadioButton->Name = L"bRadioButton";
+				this->bRadioButton->Size = System::Drawing::Size(46, 17);
+				this->bRadioButton->TabIndex = 3;
+				this->bRadioButton->TabStop = true;
+				this->bRadioButton->Text = L"Blue";
+				this->bRadioButton->UseVisualStyleBackColor = true;
+				// 
+				// pictureBox1
+				// 
+				this->pictureBox1->Location = System::Drawing::Point(172, 7);
+				this->pictureBox1->Name = L"pictureBox1";
+				this->pictureBox1->Size = System::Drawing::Size(692, 239);
+				this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+				this->pictureBox1->TabIndex = 4;
+				this->pictureBox1->TabStop = false;
+				// 
 				// MainForm
 				// 
 				this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -419,6 +497,8 @@ namespace pes {
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->EndInit();
 				this->groupBox1->ResumeLayout(false);
 				this->splitContainer1->Panel1->ResumeLayout(false);
+				this->splitContainer1->Panel2->ResumeLayout(false);
+				this->splitContainer1->Panel2->PerformLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->EndInit();
 				this->splitContainer1->ResumeLayout(false);
 				this->groupBox2->ResumeLayout(false);
@@ -431,6 +511,7 @@ namespace pes {
 				this->menuStrip1->ResumeLayout(false);
 				this->menuStrip1->PerformLayout();
 				this->panel1->ResumeLayout(false);
+				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 				this->ResumeLayout(false);
 				this->PerformLayout();
 
@@ -439,13 +520,17 @@ namespace pes {
 		private: System::Void DrawCvImage(const cv::Mat cvImage);
 		private: System::Void openButton_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void originalImageCheckBox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
-	private: System::Void cropImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-private: System::Void pictureBox_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
-private: System::Void pictureBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
-private: System::Void pictureBox_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
-private: System::Void pictureBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
-private: System::Void adjustTempuratureToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-private: System::Void filterList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
-};
+		private: System::Void cropImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void pictureBox_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		private: System::Void pictureBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		private: System::Void pictureBox_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+		private: System::Void pictureBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+		private: System::Void adjustTempuratureToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void filterList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void label1TrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void label2TrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void label3TrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void performFiltering();
+		};
 	}
 }

@@ -8,21 +8,17 @@ namespace pes {
 
 		System::Void FilterModel::Update1(ControllerModel ^ controllerModel)
 		{
+			Val[0] = controllerModel->label1TrackerBar->Value;
 			switch (functionType)
 			{
 			case 0:
-				controllerModel->label1->Text = "Value: ";
-				controllerModel->label1TrackerBar->Minimum = -100;
-				controllerModel->label1TrackerBar->Maximum = 100;
-				controllerModel->label1TrackerBar->Value = 0;
-				controllerModel->label1->Visible = true;
-				controllerModel->label1TrackerBar->Visible = true;
 				break;
 			}
 		}
 
 		System::Void FilterModel::Update2(ControllerModel ^ controllerModel)
 		{
+			Val[1] = controllerModel->label2TrackerBar->Value;
 			switch (functionType)
 			{
 			}
@@ -30,10 +26,38 @@ namespace pes {
 
 		System::Void FilterModel::Update3(ControllerModel ^ controllerModel)
 		{
+			Val[2] = controllerModel->label3TrackerBar->Value;
+			switch (functionType)
+			{
+			}
+		}
+
+		System::Void FilterModel::Initialize1(ControllerModel ^ controllerModel)
+		{
+			switch (functionType)
+			{
+			case 0:
+				controllerModel->label1->Text = "Value: ";
+				controllerModel->infoLabel1->Text = "";
+				controllerModel->label1TrackerBar->Minimum = -100;
+				controllerModel->label1TrackerBar->Maximum = 100;
+				controllerModel->label1TrackerBar->Value = variableValues[0];
+				controllerModel->Visible(1);
+				break;
+			}
+		}
+
+		System::Void FilterModel::Initialize2(ControllerModel ^ controllerModel)
+		{
 			return System::Void();
 		}
 
-		FilterModel::FilterModel(int functionType, double var1, double var2, double var3)
+		System::Void FilterModel::Initialize3(ControllerModel ^ controllerModel)
+		{
+			return System::Void();
+		}
+
+		FilterModel::FilterModel(int functionType, int var1, int var2, int var3)
 		{
 			this->functionType = functionType;
 			variableValues[0] = var1;
@@ -76,27 +100,57 @@ namespace pes {
 				Update3(controllerModel);
 				break;
 			default:
-				controllerModel->label1->Text = "";
-				controllerModel->label2->Text = "";
-				controllerModel->label3->Text = "";
-				controllerModel->infoLabel1->Text = "";
-				controllerModel->infoLabel2->Text = "";
-				controllerModel->infoLabel3->Text = "";
 				Update1(controllerModel);
 				Update2(controllerModel);
 				Update3(controllerModel);
 				controllerModel->label1TrackerBar->Value = variableValues[0];
 				controllerModel->label2TrackerBar->Value = variableValues[1];
 				controllerModel->label3TrackerBar->Value = variableValues[2];
+				break;
 			}
 		}
 
-		double FilterModel::Val::get(int index)
+		System::Void FilterModel::InitializeView(ControllerModel ^ controllerModel, int index)
+		{
+			controllerModel->HideAll();
+			switch (index)
+			{
+			case 1:
+				Initialize1(controllerModel);
+				break;
+			case 2:
+				Initialize2(controllerModel);
+				break;
+			case 3:
+				Initialize3(controllerModel);
+				break;
+			default:
+				Initialize1(controllerModel);
+				Initialize2(controllerModel);
+				Initialize3(controllerModel);
+				controllerModel->label2TrackerBar->Value = variableValues[1];
+				controllerModel->label3TrackerBar->Value = variableValues[2];
+				break;
+			}
+		}
+
+		System::String ^ FilterModel::ToString()
+		{
+			switch(functionType)
+			{
+			case 0:
+				return "Temperature Adjustment";
+			default:
+				return "Not Implemented!!!";
+			}
+		}
+
+		int FilterModel::Val::get(int index)
 		{
 			return variableValues[index];
 		}
 
-		void FilterModel::Val::set(int index, double value)
+		void FilterModel::Val::set(int index, int value)
 		{
 			variableValues[index] = value;
 		}

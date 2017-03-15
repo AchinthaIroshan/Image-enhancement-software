@@ -13,10 +13,17 @@ namespace pes {
 		Mat im;
 		Mat im2;
 
-		System::Void MainForm::DrawCvImage(const Mat cvImage)
+		System::Void MainForm::DrawCvImage(const Mat im)
 		{
 			// only color images are supported
-			assert(cvImage.type() == CV_8UC3);
+			Mat cvImage;
+			if(im.type() == CV_8UC3)
+			{
+				cvImage = im;
+			}else
+			{
+				im.convertTo(cvImage, CV_8UC3, 255.0);
+			}
 
 			if ((pictureBox->Image == nullptr) || (pictureBox->Width != cvImage.cols) || (pictureBox->Height != cvImage.rows))
 			{
@@ -53,6 +60,7 @@ namespace pes {
 					MessageBox::Show(this, "Cannot open or find the image!!", "Open Image - PES", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return System::Void();
 				}
+				im.convertTo(im, CV_32FC3, 1.0 / 255.0);
 				im2 = im.clone();
 				DrawCvImage(im);
 			}
@@ -130,7 +138,42 @@ namespace pes {
 
 		System::Void MainForm::filterList_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
-			(static_cast<FilterModel^>(filterList->SelectedItem))->UpdateView(controllerModel, 0);
+			selectedModel = static_cast<FilterModel^>(filterList->SelectedItem);
+			selectedModel->InitializeView(controllerModel, 0);
+		}
+
+		System::Void MainForm::label1TrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if(selectedModel)
+			{
+				selectedModel->UpdateView(controllerModel, 1);
+				performFiltering();
+			}
+		}
+		System::Void MainForm::label2TrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (selectedModel)
+			{
+				selectedModel->UpdateView(controllerModel, 2);
+				performFiltering();
+			}
+		}
+		System::Void MainForm::label3TrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (selectedModel)
+			{
+				selectedModel->UpdateView(controllerModel, 3);
+				performFiltering();
+			}
+		}
+		System::Void MainForm::performFiltering()
+		{
+			im2 = im.clone();
+			for each(Object ^ obj in filterList->Items)
+			{
+				im2 = (static_cast<FilterModel ^>(obj))->PerformAction(im2);
+			}
+			DrawCvImage(im2);
 		}
 	}
 }
