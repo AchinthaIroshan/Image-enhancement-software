@@ -19,6 +19,9 @@
     <Filter Include="Source Files\view">
       <UniqueIdentifier>{64673841-7164-45bf-b93e-2f8415bff00e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{f192a7b7-2eee-45a4-b889-54c70c9a8728}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="MainForm.cpp">
       <Filter>Source Files\view</Filter>
     </ClCompile>
+    <ClCompile Include="ControllerModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="FilterModel.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h">
@@ -38,5 +47,16 @@
     <ClInclude Include="MainForm.h">
       <Filter>Source Files\view</Filter>
     </ClInclude>
+    <ClInclude Include="ControllerModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FilterModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

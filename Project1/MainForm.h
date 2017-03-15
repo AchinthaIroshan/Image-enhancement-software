@@ -2,6 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include "ControllerModel.h"
 
 namespace pes {
 	namespace view {
@@ -25,6 +26,7 @@ namespace pes {
 				//
 				//TODO: Add the constructor code here
 				//
+				controllerModel = gcnew pes::model::ControllerModel(label1, infoLabel1, label2, infoLabel2, label3, infoLabel3, label1TrackBar, label2TrackBar, label3TrackBar);
 			}
 
 		protected:
@@ -60,21 +62,22 @@ namespace pes {
 		private: System::Windows::Forms::ToolStripMenuItem^  adjustTempuratureToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  deleteFilterToolStripMenuItem;
 		private: System::Windows::Forms::TrackBar^  label1TrackBar;
-
 		private: System::Windows::Forms::Label^  label2;
 		private: System::Windows::Forms::Label^  label1;
 		private: System::Windows::Forms::TrackBar^  label3TrackBar;
 		private: System::Windows::Forms::Label^  infoLabel2;
-
-
-
 		private: System::Windows::Forms::Label^  infoLabel1;
-
 		private: System::Windows::Forms::Label^  label3;
 		private: System::Windows::Forms::TrackBar^  label2TrackBar;
 		private: System::Windows::Forms::Label^  infoLabel3;
 
-
+		private: pes::model::ControllerModel^ controllerModel;
+		private: bool isDragging = false;
+		private: System::Drawing::Point^ cropStart;
+		private: System::Drawing::Point^ currentMouse;
+		private: System::Windows::Forms::ToolStripMenuItem^  cropImageToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  savePresetToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  loadPresetToolStripMenuItem;
 
 
 		protected:
@@ -99,6 +102,7 @@ namespace pes {
 				this->originalImageCheckBox = (gcnew System::Windows::Forms::CheckBox());
 				this->openButton = (gcnew System::Windows::Forms::Button());
 				this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+				this->infoLabel3 = (gcnew System::Windows::Forms::Label());
 				this->label3TrackBar = (gcnew System::Windows::Forms::TrackBar());
 				this->infoLabel2 = (gcnew System::Windows::Forms::Label());
 				this->infoLabel1 = (gcnew System::Windows::Forms::Label());
@@ -110,14 +114,16 @@ namespace pes {
 				this->panel2 = (gcnew System::Windows::Forms::Panel());
 				this->filterList = (gcnew System::Windows::Forms::ListBox());
 				this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+				this->cropImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->addFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->adjustTempuratureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->deleteFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->savePresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->loadPresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->panel1 = (gcnew System::Windows::Forms::Panel());
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
-				this->infoLabel3 = (gcnew System::Windows::Forms::Label());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
@@ -134,14 +140,18 @@ namespace pes {
 				// 
 				// pictureBox
 				// 
+				this->pictureBox->Anchor = System::Windows::Forms::AnchorStyles::None;
 				this->pictureBox->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Center;
-				this->pictureBox->Dock = System::Windows::Forms::DockStyle::Fill;
-				this->pictureBox->Location = System::Drawing::Point(0, 0);
+				this->pictureBox->Location = System::Drawing::Point(60, 56);
 				this->pictureBox->Name = L"pictureBox";
-				this->pictureBox->Size = System::Drawing::Size(867, 596);
+				this->pictureBox->Size = System::Drawing::Size(807, 540);
 				this->pictureBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 				this->pictureBox->TabIndex = 0;
 				this->pictureBox->TabStop = false;
+				this->pictureBox->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MainForm::pictureBox_Paint);
+				this->pictureBox->MouseDown += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox_MouseDown);
+				this->pictureBox->MouseMove += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox_MouseMove);
+				this->pictureBox->MouseUp += gcnew System::Windows::Forms::MouseEventHandler(this, &MainForm::pictureBox_MouseUp);
 				// 
 				// groupBox1
 				// 
@@ -208,6 +218,16 @@ namespace pes {
 				this->groupBox2->TabIndex = 4;
 				this->groupBox2->TabStop = false;
 				this->groupBox2->Text = L"Image Options";
+				// 
+				// infoLabel3
+				// 
+				this->infoLabel3->AutoSize = true;
+				this->infoLabel3->Location = System::Drawing::Point(79, 645);
+				this->infoLabel3->Name = L"infoLabel3";
+				this->infoLabel3->Size = System::Drawing::Size(35, 13);
+				this->infoLabel3->TabIndex = 17;
+				this->infoLabel3->Text = L"label6";
+				this->infoLabel3->Visible = false;
 				// 
 				// label3TrackBar
 				// 
@@ -295,30 +315,38 @@ namespace pes {
 				// filterList
 				// 
 				this->filterList->FormattingEnabled = true;
-				this->filterList->Location = System::Drawing::Point(3, 25);
+				this->filterList->Location = System::Drawing::Point(8, 21);
 				this->filterList->Name = L"filterList";
 				this->filterList->Size = System::Drawing::Size(336, 355);
 				this->filterList->TabIndex = 6;
+				this->filterList->SelectedIndexChanged += gcnew System::EventHandler(this, &MainForm::filterList_SelectedIndexChanged);
 				// 
 				// menuStrip1
 				// 
 				this->menuStrip1->Dock = System::Windows::Forms::DockStyle::Right;
-				this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
-					this->addFilterToolStripMenuItem,
-						this->deleteFilterToolStripMenuItem
+				this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(5) {
+					this->cropImageToolStripMenuItem,
+						this->addFilterToolStripMenuItem, this->deleteFilterToolStripMenuItem, this->savePresetToolStripMenuItem, this->loadPresetToolStripMenuItem
 				});
-				this->menuStrip1->Location = System::Drawing::Point(418, 0);
+				this->menuStrip1->Location = System::Drawing::Point(416, 0);
 				this->menuStrip1->Name = L"menuStrip1";
 				this->menuStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::Professional;
-				this->menuStrip1->Size = System::Drawing::Size(85, 396);
+				this->menuStrip1->Size = System::Drawing::Size(87, 396);
 				this->menuStrip1->TabIndex = 7;
 				this->menuStrip1->Text = L"menuStrip1";
+				// 
+				// cropImageToolStripMenuItem
+				// 
+				this->cropImageToolStripMenuItem->Name = L"cropImageToolStripMenuItem";
+				this->cropImageToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->cropImageToolStripMenuItem->Text = L"Crop Image";
+				this->cropImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::cropImageToolStripMenuItem_Click);
 				// 
 				// addFilterToolStripMenuItem
 				// 
 				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->adjustTempuratureToolStripMenuItem });
 				this->addFilterToolStripMenuItem->Name = L"addFilterToolStripMenuItem";
-				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(72, 19);
+				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(74, 19);
 				this->addFilterToolStripMenuItem->Text = L"Add  filter";
 				// 
 				// adjustTempuratureToolStripMenuItem
@@ -326,12 +354,25 @@ namespace pes {
 				this->adjustTempuratureToolStripMenuItem->Name = L"adjustTempuratureToolStripMenuItem";
 				this->adjustTempuratureToolStripMenuItem->Size = System::Drawing::Size(179, 22);
 				this->adjustTempuratureToolStripMenuItem->Text = L"Adjust Tempurature";
+				this->adjustTempuratureToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::adjustTempuratureToolStripMenuItem_Click);
 				// 
 				// deleteFilterToolStripMenuItem
 				// 
 				this->deleteFilterToolStripMenuItem->Name = L"deleteFilterToolStripMenuItem";
-				this->deleteFilterToolStripMenuItem->Size = System::Drawing::Size(72, 19);
+				this->deleteFilterToolStripMenuItem->Size = System::Drawing::Size(74, 19);
 				this->deleteFilterToolStripMenuItem->Text = L"Delete filter";
+				// 
+				// savePresetToolStripMenuItem
+				// 
+				this->savePresetToolStripMenuItem->Name = L"savePresetToolStripMenuItem";
+				this->savePresetToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->savePresetToolStripMenuItem->Text = L"Save Preset";
+				// 
+				// loadPresetToolStripMenuItem
+				// 
+				this->loadPresetToolStripMenuItem->Name = L"loadPresetToolStripMenuItem";
+				this->loadPresetToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->loadPresetToolStripMenuItem->Text = L"Load Preset";
 				// 
 				// panel1
 				// 
@@ -363,16 +404,6 @@ namespace pes {
 				this->saveFileDialog->Filter = L"JPEG Files|*.jpg";
 				this->saveFileDialog->InitialDirectory = L"./";
 				this->saveFileDialog->Title = L"Save Image";
-				// 
-				// infoLabel3
-				// 
-				this->infoLabel3->AutoSize = true;
-				this->infoLabel3->Location = System::Drawing::Point(79, 645);
-				this->infoLabel3->Name = L"infoLabel3";
-				this->infoLabel3->Size = System::Drawing::Size(35, 13);
-				this->infoLabel3->TabIndex = 17;
-				this->infoLabel3->Text = L"label6";
-				this->infoLabel3->Visible = false;
 				// 
 				// MainForm
 				// 
@@ -408,6 +439,13 @@ namespace pes {
 		private: System::Void DrawCvImage(const cv::Mat cvImage);
 		private: System::Void openButton_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void originalImageCheckBox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void cropImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void pictureBox_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+private: System::Void pictureBox_MouseUp(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+private: System::Void pictureBox_MouseMove(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);
+private: System::Void pictureBox_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e);
+private: System::Void adjustTempuratureToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void filterList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 };
 	}
 }
