@@ -213,15 +213,15 @@ namespace pes {
 
 		Mat Lib::SaturationAdjustment(Mat src, double value)
 		{
-			// Not Working 
-			/*cv::cvtColor(src, src, CV_BGR2HSV);
+			cv::Mat HSV_Image;
+			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
 			vector<Mat> channels(3); 
-			cv::split(src, channels);
-			std::cout << "Point value: "<< channels.at(0) << endl;
-			channels[1] = value + channels[1];
-			cv::merge(channels, src);
-			cv::cvtColor(src, src, CV_HSV2BGR);
-			return src;*/
+			cv::split(HSV_Image, channels);
+			channels.at(1) = value + channels.at(1);
+			cv::Mat reconstructed_Image;
+			cv::merge(channels, reconstructed_Image);
+			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HSV2BGR);
+			return reconstructed_Image;
 		}
 	}
 }
