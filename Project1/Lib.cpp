@@ -12,8 +12,9 @@ namespace pes {
 		{
 		}
 
-		Mat Lib::GetSharpenImage(Mat im, float value, float sigma)
+		Mat Lib::GetSharpenImage(Mat im, int value_in, float sigma) // -100 <= value_in <=100
 		{
+			double value = (value_in - 100) / 50.0;
 			CV_Assert(im.type() == CV_32FC3);
 			Mat out;
 			GaussianBlur(im, out, Size(0, 0), sigma, sigma);
@@ -21,26 +22,29 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AdjustTemperature(Mat im, int value)
+		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
+			double value = (value_in + 100) / 100.0;
 			CV_Assert(im.type() == CV_32FC3);
-			double val = value / 100.0 + 1.0;
+			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
 			Mat ch[3];
 			split(im, ch);
-			pow(ch[0], val, ch[0]);
-			pow(ch[2], 2 - val, ch[2]);
+			pow(ch[0], value, ch[0]);
+			pow(ch[2], 2 - value, ch[2]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_BGR2HSV);
 			split(out, ch);
-			pow(ch[1], val, ch[1]);
+			pow(ch[1], value, ch[1]);
 			merge(ch, 3, im);
 			cvtColor(im, out, COLOR_HSV2BGR);
 			return out;
 		}
 
-		Mat Lib::Vignette(Mat im, int value)
+		Mat Lib::Vignette(Mat im_in, int value_in) // 0 <= value_in <=100
 		{
+			Mat im = im_in;
+			int value = 1200 - 10 * value_in;
 			CV_Assert(im.type() == CV_32FC3);
 			auto kernel_x = getGaussianKernel(im.cols, value, CV_32FC1);
 			transpose(kernel_x, kernel_x);
@@ -60,8 +64,9 @@ namespace pes {
 			return im;
 		}
 
-		Mat Lib::ColorBalance(Mat im, double r, double g, double b)
+		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // 0 <= value_in <=100
 		{
+			double r = r_in / 100.0, g = g_in / 100.0, b = b_in / 100.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(r >= 0 && r <= 1);
 			CV_Assert(g >= 0 && g <= 1);
@@ -81,8 +86,10 @@ namespace pes {
 			return out;
 		}
 
-		Mat Lib::AutoCorrect(Mat im, double lim, int sz)
+		/*Mat Lib::AutoCorrect(Mat im, int lim_in, int sz_in)
 		{
+			double lim;
+			int sz;
 			CV_Assert(im.type() == CV_8UC3);
 			Mat out;
 			Mat ch[3];
@@ -94,7 +101,7 @@ namespace pes {
 			}
 			merge(ch, 3, out);
 			return out;
-		}
+		}*/
 
 		Mat Lib::BrightnessAndContrastAuto(Mat src, double clipHistPercent)
 		{
@@ -165,8 +172,9 @@ namespace pes {
 			return dst;
 		}
 
-		Mat Lib::ShadowRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::ShadowRecovery(Mat input_image, int value_in) // - 100 <= value_in <= 100
 		{
+			double alpha = (value_in ) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -178,8 +186,9 @@ namespace pes {
 			return (input_image + alpha * tripleChannelAdder);
 		}
 
-		Mat Lib::HighlightRecovery(Mat input_image, double alpha)  // Input is 32 bit floating array
+		Mat Lib::HighlightRecovery(Mat input_image, int value_in)  // - 100 <= value_in <= 100
 		{
+			double alpha = (value_in ) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -206,13 +215,14 @@ namespace pes {
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
 
-		Mat Lib::ContrastAdjustment(Mat src, double value)
+		Mat Lib::ContrastAdjustment(Mat src, int value_in) // -100 <= value_in <= 100
 		{
-			return value * src;
+			return ((value_in + 100 ) / 100.0) * src;
 		}
 
-		Mat Lib::SaturationAdjustment(Mat src, double value)
+		Mat Lib::SaturationAdjustment(Mat src, int value_in) // - 100 <= value_in <= 100
 		{
+			double value = (value_in) / 100.0;
 			cv::Mat HSV_Image;
 			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
 			vector<Mat> channels(3);
@@ -224,44 +234,7 @@ namespace pes {
 			return reconstructed_Image;
 		}
 
-		Mat Lib::histogram(Mat src) {
-			int histogram[256] = { 0 };
 
-			for (int y = 0; y < src.rows; y++) {
-				for (int x = 0; x < src.cols; x++) {
-					histogram[src.at<uchar>(y, x)]++;
-				}
-			}
-
-			int hist_wd = 512;
-			int hist_ht = 400;
-
-			int bin_wd = cvRound((double)hist_wd / 256);
-
-			Mat histIm(hist_ht, hist_wd, CV_8UC1, Scalar(255, 255, 255));
-
-			int max = histogram[0];
-
-			for (int i = 0; i < 255; i++) {
-				if (histogram[i] > max) {
-					max = histogram[i];
-				}
-			}
-
-			//normalize the histogrm values from 0 to number of rows
-
-			for (int i = 0; i < 255; i++) {
-				histogram[i] = ((double)histogram[i] / max)*src.rows;
-			}
-
-			for (int i = 0; i < 255; i++) {
-				line(histIm, Point(bin_wd*(i), hist_ht), Point(bin_wd*(i), hist_ht - histogram[i]), Scalar(0, 0, 0));
-			}
-
-			return histIm;
-
-
-		}
 		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
 			Mat dst;
 			int i = KernalSize;
@@ -316,6 +289,71 @@ namespace pes {
 			Mat hist = Lib::histogram(bgr[0]);
 
 			return hist;
+
+		}
+		Mat Lib::histogram(Mat src) {
+			int histogram[256] = { 0 };
+
+			for (int y = 0; y < src.rows; y++) {
+				for (int x = 0; x < src.cols; x++) {
+					histogram[(int)src.at<uchar>(y, x)]++;
+				}
+			}
+
+			for (int i = 0; i < 255; i++) {
+				cout << histogram[i] << endl;
+			}
+
+			int hist_wd = 512;
+			int hist_ht = 400;
+
+			int bin_wd = cvRound((double)hist_wd / 256);
+
+			Mat histIm(hist_ht, hist_wd, CV_8UC1, Scalar(255, 255, 255));
+
+			int max = histogram[0];
+
+			for (int i = 0; i<255; i++) {
+				if (histogram[i] > max) {
+					max = histogram[i];
+				}
+			}
+
+			//normalize the histogrm values from 0 to number of rows
+
+			for (int i = 0; i<255; i++) {
+				histogram[i] = ((double)histogram[i] / max)*src.rows;
+			}
+
+			for (int i = 0; i < 255; i++) {
+				line(histIm, Point(bin_wd*(i), hist_ht), Point(bin_wd*(i), hist_ht - histogram[i]), Scalar(0, 0, 0));
+			}
+
+			return histIm;
+
+
+		}
+
+		Mat Lib::rgbHistogram(Mat src) {
+
+			Mat gryScale;
+			cvtColor(src, gryScale, CV_RGB2GRAY);
+			Mat hist = Lib::histogram(gryScale);
+			return hist;
+		}
+
+		Mat Lib::ExposureAdjustment(Mat src, int value_in) // 0 <= value_in <= 100
+		{
+			double value = (value_in) / 100.0;
+			cv::Mat HLS_Image;
+			cv::cvtColor(src, HLS_Image, CV_BGR2HLS);
+			vector<Mat> channels(3);
+			cv::split(HLS_Image, channels);
+			channels.at(1) = channels.at(1) * pow(2, value);
+			cv::Mat reconstructed_Image;
+			cv::merge(channels, reconstructed_Image);
+			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HLS2BGR);
+			return reconstructed_Image;
 		}
 	}
 }
