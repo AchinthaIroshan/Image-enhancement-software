@@ -234,7 +234,6 @@ namespace pes {
 			return reconstructed_Image;
 		}
 
-
 		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
 			Mat dst;
 			int i = KernalSize;
@@ -263,9 +262,7 @@ namespace pes {
 			bilateralFilter(src, dst, i, i * 2, i / 2);
 			return dst;
 		}
-
-
-		
+	
 		Mat *Lib::colourHistogram(Mat src) {
 			Mat bgr[3];
 			Mat blue, green, red;
@@ -286,6 +283,7 @@ namespace pes {
 			return hist;
 
 		}
+
 		Mat Lib::histogram(Mat src) {
 			int histogram[256] = { 0 };
 
@@ -349,6 +347,21 @@ namespace pes {
 			cv::merge(channels, reconstructed_Image);
 			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HLS2BGR);
 			return reconstructed_Image;
+		}
+
+		cv::Scalar Lib::CalculateColorTemperature(Mat src) // 0 <= value_in <= 100
+		{
+			cv::Mat XYZ_Image;
+			cv::cvtColor(src, XYZ_Image, CV_BGR2XYZ);
+			vector<Mat> channels(3);
+			cv::split(XYZ_Image, channels);
+			Mat sum = channels.at(0) + channels.at(1) + channels.at(2);
+			Mat x; divide(channels.at(0), sum, x); x = x - 0.3320;
+			Mat y; divide(channels.at(1), sum, y); y = 0.1858 - y;
+			Mat n; divide(x, y, n);
+			Mat n3, n2; cv::pow(n, 3, n3); cv::pow(n, 2, n2);
+			Mat CCT = 449 * n3 + 3525 * n2 + 6823.3 * n + 5520.33;
+			return cv::mean(CCT);
 		}
 	}
 }

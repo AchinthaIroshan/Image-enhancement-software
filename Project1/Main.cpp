@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 	Application::Run(gcnew MainForm);*/
 
 	Mat image;
-	image = imread("../../im3.jpg", IMREAD_COLOR); // Read the file
+	image = imread("../../im2.jpg", IMREAD_COLOR); // Read the file
 
 	resize(image, image, cv::Size(400, 400));
 
@@ -55,6 +55,7 @@ int main(int argc, char** argv)
 	namedWindow("output window", WINDOW_AUTOSIZE); // Create a window for display.
 	imshow("output window", globalInput);
 
+	std::cout << "Temperature: " << Lib::CalculateColorTemperature(image).val[0]<< " K" << std::endl;
 	waitKey(0); // Wait for a keystroke in the window
 	return 0;
 }
@@ -76,7 +77,7 @@ void highlightRecovery(int value, void*)
 
 void Crop(int value, void*)
 {
-	imshow("output window", Lib::Crop(globalInput, cv::Point(20, 40), 200, 200)); // Show our image inside it.
+	imshow("output window", Lib::Crop(globalInput, cv::Point(20, 40), 380.0, 250.0)); // Show our image inside it.
 }
 
 void Contrast(int value, void*)
@@ -86,6 +87,7 @@ void Contrast(int value, void*)
 
 void SaturationAdjust(int value, void*)
 {
+	std::cout << "Temperature: " << Lib::CalculateColorTemperature( Lib::SaturationAdjustment(globalInput, (value)) ).val[0] << " K" << std::endl;
 	imshow("output window", Lib::SaturationAdjustment(globalInput, (value))); // Show our image inside it.
 }
 

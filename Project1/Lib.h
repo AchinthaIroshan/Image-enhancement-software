@@ -3,6 +3,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cmath>
+#include <iostream>
 
 #define UPPER_SHADOW_LEVEL 0.24
 #define LOWER_SHADOW_LEVEL 0.05
@@ -38,6 +39,8 @@ namespace pes {
 			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
 			static Mat *colourHistogram(Mat src);
 			static Mat rgbHistogram(Mat src);
+			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
+			static cv::Scalar CalculateColorTemperature(Mat src);
 		private:
 			Lib();
 
