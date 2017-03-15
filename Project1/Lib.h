@@ -2,6 +2,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <iostream>
 
 #define UPPER_SHADOW_LEVEL 0.24
 #define LOWER_SHADOW_LEVEL 0.05
@@ -28,6 +29,7 @@ namespace pes {
 			static Mat HighlightRecovery(Mat input_image, double alpha);
 			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
 			static Mat ContrastAdjustment(Mat src, double value);
+			static Mat SaturationAdjustment(Mat src, double value);
 		private:
 			Lib();
 

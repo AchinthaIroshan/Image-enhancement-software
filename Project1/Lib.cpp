@@ -193,12 +193,35 @@ namespace pes {
 
 		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
 		{
+			if (_height > src.rows)
+			{
+				_height = src.rows;
+			}
+
+			if (_width > src.cols)
+			{
+				_width = src.cols;
+			}
+
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
 
 		Mat Lib::ContrastAdjustment(Mat src, double value)
 		{
 			return value * src;
+		}
+
+		Mat Lib::SaturationAdjustment(Mat src, double value)
+		{
+			cv::Mat HSV_Image;
+			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
+			vector<Mat> channels(3); 
+			cv::split(HSV_Image, channels);
+			channels.at(1) = value + channels.at(1);
+			cv::Mat reconstructed_Image;
+			cv::merge(channels, reconstructed_Image);
+			cv::cvtColor(reconstructed_Image, reconstructed_Image, CV_HSV2BGR);
+			return reconstructed_Image;
 		}
 	}
 }
