@@ -80,9 +80,9 @@ namespace pes {
 		{
 			cli::array<System::String^> ^text = label->Split(';');
 			int functionType = System::Int32::Parse(text[0]);
-			double var1 = System::Double::Parse(text[1]);
-			double var2 = System::Double::Parse(text[2]);
-			double var3 = System::Double::Parse(text[3]);
+			int var1 = System::Int32::Parse(text[1]);
+			int var2 = System::Int32::Parse(text[2]);
+			int var3 = System::Int32::Parse(text[3]);
 			return gcnew FilterModel(functionType, var1, var2, var3);
 		}
 

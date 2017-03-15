@@ -24,7 +24,7 @@ namespace pes {
 		Mat Lib::AdjustTemperature(Mat im, int value)
 		{
 			CV_Assert(im.type() == CV_32FC3);
-			double val = value/100.0 + 1.0;
+			double val = value / 100.0 + 1.0;
 			Mat out;
 			Mat ch[3];
 			split(im, ch);
@@ -215,7 +215,7 @@ namespace pes {
 		{
 			cv::Mat HSV_Image;
 			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
-			vector<Mat> channels(3); 
+			vector<Mat> channels(3);
 			cv::split(HSV_Image, channels);
 			channels.at(1) = value + channels.at(1);
 			cv::Mat reconstructed_Image;
@@ -229,12 +229,8 @@ namespace pes {
 
 			for (int y = 0; y < src.rows; y++) {
 				for (int x = 0; x < src.cols; x++) {
-					histogram[(int)src.at<uchar>(y, x)]++;
+					histogram[src.at<uchar>(y, x)]++;
 				}
-			}
-
-			for (int i = 0; i < 255; i++) {
-				cout << histogram[i] << endl;
 			}
 
 			int hist_wd = 512;
@@ -246,7 +242,7 @@ namespace pes {
 
 			int max = histogram[0];
 
-			for (int i = 0; i<255; i++) {
+			for (int i = 0; i < 255; i++) {
 				if (histogram[i] > max) {
 					max = histogram[i];
 				}
@@ -254,7 +250,7 @@ namespace pes {
 
 			//normalize the histogrm values from 0 to number of rows
 
-			for (int i = 0; i<255; i++) {
+			for (int i = 0; i < 255; i++) {
 				histogram[i] = ((double)histogram[i] / max)*src.rows;
 			}
 
@@ -294,26 +290,32 @@ namespace pes {
 			bilateralFilter(src, dst, i, i * 2, i / 2);
 			return dst;
 		}
-		
-		Mat *Lib::colourHistogram(Mat src) {
+
+		Mat Lib::redHistogram(Mat src)
+		{
 			Mat bgr[3];
-			Mat blue, green, red;
-
 			split(src, bgr);
-
-			blue = bgr[0];
-			green = bgr[1];
-			red = bgr[2];
-
-
-			Mat bhist = Lib::histogram(blue);
-			Mat ghist = Lib::histogram(green);
-			Mat rhist = Lib::histogram(red);
-
-			Mat hist[3] = { bhist ,ghist ,rhist };
+			Mat hist = Lib::histogram(bgr[2]);
 
 			return hist;
+		}
 
+		Mat Lib::greenHistogram(Mat src)
+		{
+			Mat bgr[3];
+			split(src, bgr);
+			Mat hist = Lib::histogram(bgr[1]);
+
+			return hist;
+		}
+
+		Mat Lib::blueHistogram(Mat src)
+		{
+			Mat bgr[3];
+			split(src, bgr);
+			Mat hist = Lib::histogram(bgr[0]);
+
+			return hist;
 		}
 	}
 }

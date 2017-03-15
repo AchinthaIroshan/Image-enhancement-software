@@ -35,7 +35,9 @@ namespace pes {
 			static Mat noiseRed_GaussianFilter(Mat src, int KernalSize);
 			static Mat noiseRed_MedianFilter(Mat src, int KernalSize);
 			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
-			static Mat *colourHistogram(Mat src);
+			static Mat redHistogram(Mat src);
+			static Mat greenHistogram(Mat src);
+			static Mat blueHistogram(Mat src);
 		private:
 			Lib();
 

@@ -13,16 +13,16 @@ namespace pes {
 		Mat im;
 		Mat im2;
 
-		System::Void MainForm::DrawCvImage(const Mat im)
+		System::Void MainForm::DrawCvImage(const Mat im_)
 		{
 			// only color images are supported
 			Mat cvImage;
-			if(im.type() == CV_8UC3)
+			if(im_.type() == CV_8UC3)
 			{
-				cvImage = im;
+				cvImage = im_;
 			}else
 			{
-				im.convertTo(cvImage, CV_8UC3, 255.0);
+				im_.convertTo(cvImage, CV_8UC3, 255.0);
 			}
 
 			if ((pictureBox->Image == nullptr) || (pictureBox->Width != cvImage.cols) || (pictureBox->Height != cvImage.rows))
@@ -41,11 +41,61 @@ namespace pes {
 				System::IntPtr(cvImage.data)
 			);
 
+			DrawHist(cvImage);
+
 			// Draw Bitmap over a PictureBox
 			Graphics^ g = Graphics::FromImage(pictureBox->Image);
 
 			g->DrawImage(bmpImage, 0, 0, cvImage.cols, cvImage.rows);
 			pictureBox->Refresh();
+
+			delete g;
+		}
+
+		System::Void MainForm::DrawHist(const cv::Mat im__)
+		{
+			Mat cvImage;
+			Mat im_;
+			if (im__.type() == CV_8UC3)
+			{
+				im_ = im__;
+			}
+			else
+			{
+				im__.convertTo(im_, CV_8UC3, 255.0);
+			}
+			if(rRadioButton->Checked)
+			{
+				cvImage = Lib::redHistogram(im_);
+			}else if(gRadioButton->Checked)
+			{
+				cvImage = Lib::greenHistogram(im_);
+			}else if(bRadioButton->Checked)
+			{
+				cvImage = Lib::blueHistogram(im_);
+			}
+			resize(cvImage, cvImage, cv::Size(760, 230));
+			if ((histPictureBox->Image == nullptr) || (histPictureBox->Width != cvImage.cols) || (histPictureBox->Height != cvImage.rows))
+			{
+				histPictureBox->Width = cvImage.cols;
+				histPictureBox->Height = cvImage.rows;
+				histPictureBox->Image = gcnew System::Drawing::Bitmap(cvImage.cols, cvImage.rows);
+				histPictureBox->Left = (this->histPanel->Width - histPictureBox->Width) / 2;
+				histPictureBox->Top = (this->histPanel->Height - histPictureBox->Height) / 2;
+			}
+
+			// Create System::Drawing::Bitmap from cv::Mat
+			System::Drawing::Bitmap^ bmpImage = gcnew Bitmap(
+				cvImage.cols, cvImage.rows, cvImage.step,
+				System::Drawing::Imaging::PixelFormat::Format8bppIndexed,
+				System::IntPtr(cvImage.data)
+			);
+
+			// Draw Bitmap over a histPictureBox
+			Graphics^ g = Graphics::FromImage(histPictureBox->Image);
+
+			g->DrawImage(bmpImage, 0, 0, cvImage.cols, cvImage.rows);
+			histPictureBox->Refresh();
 
 			delete g;
 		}
@@ -174,6 +224,22 @@ namespace pes {
 				im2 = (static_cast<FilterModel ^>(obj))->PerformAction(im2);
 			}
 			DrawCvImage(im2);
+		}
+		System::Void MainForm::rgbRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if(im2.data) DrawHist(im2);
+		}
+		System::Void MainForm::rRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (im2.data) DrawHist(im2);
+		}
+		System::Void MainForm::gRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (im2.data) DrawHist(im2);
+		}
+		System::Void MainForm::bRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (im2.data) DrawHist(im2);
 		}
 	}
 }

@@ -80,11 +80,14 @@ namespace pes {
 		private: System::Windows::Forms::ToolStripMenuItem^  cropImageToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  savePresetToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  loadPresetToolStripMenuItem;
-		private: System::Windows::Forms::PictureBox^  pictureBox1;
+		private: System::Windows::Forms::PictureBox^  histPictureBox;
+
 		private: System::Windows::Forms::RadioButton^  bRadioButton;
 		private: System::Windows::Forms::RadioButton^  gRadioButton;
 		private: System::Windows::Forms::RadioButton^  rRadioButton;
 		private: System::Windows::Forms::RadioButton^  rgbRadioButton;
+		private: System::Windows::Forms::Panel^  histPanel;
+
 
 
 		protected:
@@ -106,6 +109,12 @@ namespace pes {
 				this->pictureBox = (gcnew System::Windows::Forms::PictureBox());
 				this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 				this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
+				this->histPanel = (gcnew System::Windows::Forms::Panel());
+				this->histPictureBox = (gcnew System::Windows::Forms::PictureBox());
+				this->bRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->gRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->rRadioButton = (gcnew System::Windows::Forms::RadioButton());
+				this->rgbRadioButton = (gcnew System::Windows::Forms::RadioButton());
 				this->originalImageCheckBox = (gcnew System::Windows::Forms::CheckBox());
 				this->openButton = (gcnew System::Windows::Forms::Button());
 				this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
@@ -131,17 +140,14 @@ namespace pes {
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
-				this->rgbRadioButton = (gcnew System::Windows::Forms::RadioButton());
-				this->rRadioButton = (gcnew System::Windows::Forms::RadioButton());
-				this->gRadioButton = (gcnew System::Windows::Forms::RadioButton());
-				this->bRadioButton = (gcnew System::Windows::Forms::RadioButton());
-				this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
 				this->splitContainer1->Panel1->SuspendLayout();
 				this->splitContainer1->Panel2->SuspendLayout();
 				this->splitContainer1->SuspendLayout();
+				this->histPanel->SuspendLayout();
+				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->histPictureBox))->BeginInit();
 				this->groupBox2->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->label3TrackBar))->BeginInit();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->label2TrackBar))->BeginInit();
@@ -149,7 +155,6 @@ namespace pes {
 				this->panel2->SuspendLayout();
 				this->menuStrip1->SuspendLayout();
 				this->panel1->SuspendLayout();
-				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->BeginInit();
 				this->SuspendLayout();
 				// 
 				// pictureBox
@@ -191,7 +196,7 @@ namespace pes {
 				// 
 				// splitContainer1.Panel2
 				// 
-				this->splitContainer1->Panel2->Controls->Add(this->pictureBox1);
+				this->splitContainer1->Panel2->Controls->Add(this->histPanel);
 				this->splitContainer1->Panel2->Controls->Add(this->bRadioButton);
 				this->splitContainer1->Panel2->Controls->Add(this->gRadioButton);
 				this->splitContainer1->Panel2->Controls->Add(this->rRadioButton);
@@ -199,6 +204,69 @@ namespace pes {
 				this->splitContainer1->Size = System::Drawing::Size(867, 777);
 				this->splitContainer1->SplitterDistance = 524;
 				this->splitContainer1->TabIndex = 2;
+				// 
+				// histPanel
+				// 
+				this->histPanel->Controls->Add(this->histPictureBox);
+				this->histPanel->Location = System::Drawing::Point(90, 3);
+				this->histPanel->Name = L"histPanel";
+				this->histPanel->Size = System::Drawing::Size(774, 243);
+				this->histPanel->TabIndex = 5;
+				// 
+				// histPictureBox
+				// 
+				this->histPictureBox->Location = System::Drawing::Point(3, 3);
+				this->histPictureBox->Name = L"histPictureBox";
+				this->histPictureBox->Size = System::Drawing::Size(768, 237);
+				this->histPictureBox->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
+				this->histPictureBox->TabIndex = 4;
+				this->histPictureBox->TabStop = false;
+				// 
+				// bRadioButton
+				// 
+				this->bRadioButton->AutoSize = true;
+				this->bRadioButton->Location = System::Drawing::Point(14, 84);
+				this->bRadioButton->Name = L"bRadioButton";
+				this->bRadioButton->Size = System::Drawing::Size(46, 17);
+				this->bRadioButton->TabIndex = 3;
+				this->bRadioButton->Text = L"Blue";
+				this->bRadioButton->UseVisualStyleBackColor = true;
+				this->bRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::bRadioButton_CheckedChanged);
+				// 
+				// gRadioButton
+				// 
+				this->gRadioButton->AutoSize = true;
+				this->gRadioButton->Location = System::Drawing::Point(14, 61);
+				this->gRadioButton->Name = L"gRadioButton";
+				this->gRadioButton->Size = System::Drawing::Size(54, 17);
+				this->gRadioButton->TabIndex = 2;
+				this->gRadioButton->Text = L"Green";
+				this->gRadioButton->UseVisualStyleBackColor = true;
+				this->gRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::gRadioButton_CheckedChanged);
+				// 
+				// rRadioButton
+				// 
+				this->rRadioButton->AutoSize = true;
+				this->rRadioButton->Location = System::Drawing::Point(14, 38);
+				this->rRadioButton->Name = L"rRadioButton";
+				this->rRadioButton->Size = System::Drawing::Size(45, 17);
+				this->rRadioButton->TabIndex = 1;
+				this->rRadioButton->Text = L"Red";
+				this->rRadioButton->UseVisualStyleBackColor = true;
+				this->rRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::rRadioButton_CheckedChanged);
+				// 
+				// rgbRadioButton
+				// 
+				this->rgbRadioButton->AutoSize = true;
+				this->rgbRadioButton->Checked = true;
+				this->rgbRadioButton->Location = System::Drawing::Point(14, 15);
+				this->rgbRadioButton->Name = L"rgbRadioButton";
+				this->rgbRadioButton->Size = System::Drawing::Size(48, 17);
+				this->rgbRadioButton->TabIndex = 0;
+				this->rgbRadioButton->TabStop = true;
+				this->rgbRadioButton->Text = L"RGB";
+				this->rgbRadioButton->UseVisualStyleBackColor = true;
+				this->rgbRadioButton->CheckedChanged += gcnew System::EventHandler(this, &MainForm::rgbRadioButton_CheckedChanged);
 				// 
 				// originalImageCheckBox
 				// 
@@ -430,59 +498,6 @@ namespace pes {
 				this->saveFileDialog->InitialDirectory = L"./";
 				this->saveFileDialog->Title = L"Save Image";
 				// 
-				// rgbRadioButton
-				// 
-				this->rgbRadioButton->AutoSize = true;
-				this->rgbRadioButton->Location = System::Drawing::Point(14, 15);
-				this->rgbRadioButton->Name = L"rgbRadioButton";
-				this->rgbRadioButton->Size = System::Drawing::Size(48, 17);
-				this->rgbRadioButton->TabIndex = 0;
-				this->rgbRadioButton->TabStop = true;
-				this->rgbRadioButton->Text = L"RGB";
-				this->rgbRadioButton->UseVisualStyleBackColor = true;
-				// 
-				// rRadioButton
-				// 
-				this->rRadioButton->AutoSize = true;
-				this->rRadioButton->Location = System::Drawing::Point(14, 38);
-				this->rRadioButton->Name = L"rRadioButton";
-				this->rRadioButton->Size = System::Drawing::Size(45, 17);
-				this->rRadioButton->TabIndex = 1;
-				this->rRadioButton->TabStop = true;
-				this->rRadioButton->Text = L"Red";
-				this->rRadioButton->UseVisualStyleBackColor = true;
-				// 
-				// gRadioButton
-				// 
-				this->gRadioButton->AutoSize = true;
-				this->gRadioButton->Location = System::Drawing::Point(14, 61);
-				this->gRadioButton->Name = L"gRadioButton";
-				this->gRadioButton->Size = System::Drawing::Size(54, 17);
-				this->gRadioButton->TabIndex = 2;
-				this->gRadioButton->TabStop = true;
-				this->gRadioButton->Text = L"Green";
-				this->gRadioButton->UseVisualStyleBackColor = true;
-				// 
-				// bRadioButton
-				// 
-				this->bRadioButton->AutoSize = true;
-				this->bRadioButton->Location = System::Drawing::Point(14, 84);
-				this->bRadioButton->Name = L"bRadioButton";
-				this->bRadioButton->Size = System::Drawing::Size(46, 17);
-				this->bRadioButton->TabIndex = 3;
-				this->bRadioButton->TabStop = true;
-				this->bRadioButton->Text = L"Blue";
-				this->bRadioButton->UseVisualStyleBackColor = true;
-				// 
-				// pictureBox1
-				// 
-				this->pictureBox1->Location = System::Drawing::Point(172, 7);
-				this->pictureBox1->Name = L"pictureBox1";
-				this->pictureBox1->Size = System::Drawing::Size(692, 239);
-				this->pictureBox1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
-				this->pictureBox1->TabIndex = 4;
-				this->pictureBox1->TabStop = false;
-				// 
 				// MainForm
 				// 
 				this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -501,6 +516,8 @@ namespace pes {
 				this->splitContainer1->Panel2->PerformLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->EndInit();
 				this->splitContainer1->ResumeLayout(false);
+				this->histPanel->ResumeLayout(false);
+				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->histPictureBox))->EndInit();
 				this->groupBox2->ResumeLayout(false);
 				this->groupBox2->PerformLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->label3TrackBar))->EndInit();
@@ -511,13 +528,13 @@ namespace pes {
 				this->menuStrip1->ResumeLayout(false);
 				this->menuStrip1->PerformLayout();
 				this->panel1->ResumeLayout(false);
-				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox1))->EndInit();
 				this->ResumeLayout(false);
 				this->PerformLayout();
 
 			}
 #pragma endregion
 		private: System::Void DrawCvImage(const cv::Mat cvImage);
+		private: System::Void DrawHist(const cv::Mat cvImage);
 		private: System::Void openButton_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void originalImageCheckBox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void cropImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
@@ -531,6 +548,10 @@ namespace pes {
 		private: System::Void label2TrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void label3TrackBar_Scroll(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void performFiltering();
-		};
+private: System::Void rgbRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void rRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void gRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void bRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+};
 	}
 }
