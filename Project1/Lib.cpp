@@ -24,7 +24,7 @@ namespace pes {
 
 		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
-			double value = (value_in + 100) / 100.0;
+			double value = (value_in + 100) / 150.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
@@ -64,13 +64,13 @@ namespace pes {
 			return im;
 		}
 
-		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // 0 <= value_in <=100
+		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // -100 <= value_in <=100
 		{
-			double r = r_in / 100.0, g = g_in / 100.0, b = b_in / 100.0;
+			double r = r_in / 150.0, g = g_in / 150.0, b = b_in / 150.0;
 			CV_Assert(im.type() == CV_32FC3);
-			CV_Assert(r >= 0 && r <= 1);
-			CV_Assert(g >= 0 && g <= 1);
-			CV_Assert(b >= 0 && b <= 1);
+			CV_Assert(r >= -1 && r <= 1);
+			CV_Assert(g >= -1 && g <= 1);
+			CV_Assert(b >= -1 && b <= 1);
 			Mat out;
 			Mat ch[3];
 			split(im, ch);

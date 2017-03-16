@@ -87,6 +87,9 @@ namespace pes {
 		private: System::Windows::Forms::RadioButton^  rRadioButton;
 		private: System::Windows::Forms::RadioButton^  rgbRadioButton;
 		private: System::Windows::Forms::Panel^  histPanel;
+		private: System::Windows::Forms::ToolStripMenuItem^  vignetteToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  colorBalanceToolStripMenuItem;
+
 
 
 
@@ -133,6 +136,7 @@ namespace pes {
 				this->cropImageToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->addFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->adjustTempuratureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->vignetteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->deleteFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->savePresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->loadPresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -140,6 +144,7 @@ namespace pes {
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
+				this->colorBalanceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
@@ -421,25 +426,28 @@ namespace pes {
 					this->cropImageToolStripMenuItem,
 						this->addFilterToolStripMenuItem, this->deleteFilterToolStripMenuItem, this->savePresetToolStripMenuItem, this->loadPresetToolStripMenuItem
 				});
-				this->menuStrip1->Location = System::Drawing::Point(416, 0);
+				this->menuStrip1->Location = System::Drawing::Point(405, 0);
 				this->menuStrip1->Name = L"menuStrip1";
 				this->menuStrip1->RenderMode = System::Windows::Forms::ToolStripRenderMode::Professional;
-				this->menuStrip1->Size = System::Drawing::Size(87, 396);
+				this->menuStrip1->Size = System::Drawing::Size(98, 396);
 				this->menuStrip1->TabIndex = 7;
 				this->menuStrip1->Text = L"menuStrip1";
 				// 
 				// cropImageToolStripMenuItem
 				// 
 				this->cropImageToolStripMenuItem->Name = L"cropImageToolStripMenuItem";
-				this->cropImageToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->cropImageToolStripMenuItem->Size = System::Drawing::Size(85, 19);
 				this->cropImageToolStripMenuItem->Text = L"Crop Image";
 				this->cropImageToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::cropImageToolStripMenuItem_Click);
 				// 
 				// addFilterToolStripMenuItem
 				// 
-				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->adjustTempuratureToolStripMenuItem });
+				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+					this->adjustTempuratureToolStripMenuItem,
+						this->vignetteToolStripMenuItem, this->colorBalanceToolStripMenuItem
+				});
 				this->addFilterToolStripMenuItem->Name = L"addFilterToolStripMenuItem";
-				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(85, 19);
 				this->addFilterToolStripMenuItem->Text = L"Add  filter";
 				// 
 				// adjustTempuratureToolStripMenuItem
@@ -449,22 +457,29 @@ namespace pes {
 				this->adjustTempuratureToolStripMenuItem->Text = L"Adjust Tempurature";
 				this->adjustTempuratureToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::adjustTempuratureToolStripMenuItem_Click);
 				// 
+				// vignetteToolStripMenuItem
+				// 
+				this->vignetteToolStripMenuItem->Name = L"vignetteToolStripMenuItem";
+				this->vignetteToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->vignetteToolStripMenuItem->Text = L"Vignette";
+				this->vignetteToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::vignetteToolStripMenuItem_Click);
+				// 
 				// deleteFilterToolStripMenuItem
 				// 
 				this->deleteFilterToolStripMenuItem->Name = L"deleteFilterToolStripMenuItem";
-				this->deleteFilterToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->deleteFilterToolStripMenuItem->Size = System::Drawing::Size(85, 19);
 				this->deleteFilterToolStripMenuItem->Text = L"Delete filter";
 				// 
 				// savePresetToolStripMenuItem
 				// 
 				this->savePresetToolStripMenuItem->Name = L"savePresetToolStripMenuItem";
-				this->savePresetToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->savePresetToolStripMenuItem->Size = System::Drawing::Size(85, 19);
 				this->savePresetToolStripMenuItem->Text = L"Save Preset";
 				// 
 				// loadPresetToolStripMenuItem
 				// 
 				this->loadPresetToolStripMenuItem->Name = L"loadPresetToolStripMenuItem";
-				this->loadPresetToolStripMenuItem->Size = System::Drawing::Size(74, 19);
+				this->loadPresetToolStripMenuItem->Size = System::Drawing::Size(85, 19);
 				this->loadPresetToolStripMenuItem->Text = L"Load Preset";
 				// 
 				// panel1
@@ -497,6 +512,13 @@ namespace pes {
 				this->saveFileDialog->Filter = L"JPEG Files|*.jpg";
 				this->saveFileDialog->InitialDirectory = L"./";
 				this->saveFileDialog->Title = L"Save Image";
+				// 
+				// colorBalanceToolStripMenuItem
+				// 
+				this->colorBalanceToolStripMenuItem->Name = L"colorBalanceToolStripMenuItem";
+				this->colorBalanceToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->colorBalanceToolStripMenuItem->Text = L"Color Balance";
+				this->colorBalanceToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::colorBalanceToolStripMenuItem_Click);
 				// 
 				// MainForm
 				// 
@@ -552,6 +574,8 @@ private: System::Void rgbRadioButton_CheckedChanged(System::Object^  sender, Sys
 private: System::Void rRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void gRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void bRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
+private: System::Void vignetteToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void colorBalanceToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 	}
 }

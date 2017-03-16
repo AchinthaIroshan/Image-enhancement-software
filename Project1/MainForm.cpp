@@ -33,14 +33,14 @@ namespace pes {
 				pictureBox->Left = (this->splitContainer1->Panel1->Width - pictureBox->Width) / 2;
 				pictureBox->Top = (this->splitContainer1->Panel1->Height - pictureBox->Height) / 2;
 			}
-
+			
 			// Create System::Drawing::Bitmap from cv::Mat
 			System::Drawing::Bitmap^ bmpImage = gcnew Bitmap(
 				cvImage.cols, cvImage.rows, cvImage.step,
 				System::Drawing::Imaging::PixelFormat::Format24bppRgb,
 				System::IntPtr(cvImage.data)
 			);
-
+			
 			DrawHist(cvImage);
 
 			// Draw Bitmap over a PictureBox
@@ -48,7 +48,8 @@ namespace pes {
 
 			g->DrawImage(bmpImage, 0, 0, cvImage.cols, cvImage.rows);
 			pictureBox->Refresh();
-
+			
+			delete bmpImage;
 			delete g;
 		}
 
@@ -114,8 +115,7 @@ namespace pes {
 					return System::Void();
 				}
 				im.convertTo(im, CV_32FC3, 1.0 / 255.0);
-				im2 = im.clone();
-				DrawCvImage(im);
+				performFiltering();
 			}
 		}
 
@@ -149,7 +149,7 @@ namespace pes {
 
 		System::Void MainForm::pictureBox_MouseDown(System::Object ^ sender, System::Windows::Forms::MouseEventArgs ^ e)
 		{
-			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark) {
+			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark && !isDragging) {
 				cropStart = e->Location;
 				cout << msclr::interop::marshal_as<std::string>(cropStart->ToString()) << " :A" << endl;
 				currentMouse = e->Location;
@@ -159,11 +159,12 @@ namespace pes {
 
 		System::Void MainForm::pictureBox_MouseUp(System::Object ^ sender, System::Windows::Forms::MouseEventArgs ^ e)
 		{
-			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark) {
+			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark && isDragging) {
 				isDragging = false;
 				cropImageToolStripMenuItem_Click(nullptr, nullptr);
-				im2 = Lib::Crop(im2.clone(), cv::Point(cropStart->X, cropStart->Y), Math::Abs(currentMouse->X - cropStart->X), Math::Abs(currentMouse->Y - cropStart->Y));
-				DrawCvImage(im2);
+				cout << "Strt: " << cv::Point(cropStart->X, cropStart->Y) << "\tEND: " << cv::Point(currentMouse->X, currentMouse->Y) << "\t\tX: " << Math::Abs(currentMouse->X - cropStart->X) << "\tY: " << Math::Abs(currentMouse->Y - cropStart->Y) << endl;
+				im2 = Lib::Crop(im2, cv::Point(cropStart->X, cropStart->Y), Math::Abs(currentMouse->X - cropStart->X), Math::Abs(currentMouse->Y - cropStart->Y));
+				DrawCvImage(im2.clone());
 			}
 		}
 
@@ -245,6 +246,14 @@ namespace pes {
 		System::Void MainForm::bRadioButton_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			if (im2.data) DrawHist(im2);
+		}
+		System::Void MainForm::vignetteToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(1, 0, 0, 0));
+		}
+		System::Void MainForm::colorBalanceToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(2, 0, 0, 0));
 		}
 	}
 }
