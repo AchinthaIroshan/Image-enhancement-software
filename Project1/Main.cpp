@@ -55,7 +55,7 @@ int main(int argc, char** argv)
 	namedWindow("output window", WINDOW_AUTOSIZE); // Create a window for display.
 	imshow("output window", globalInput);
 
-	std::cout << "Temperature: " << Lib::CalculateColorTemperature(image).val[0]<< " K" << std::endl;
+	std::cout << "Temperature: " << Lib::CalculateColorTemperature(image)<< " K" << std::endl;
 	waitKey(0); // Wait for a keystroke in the window
 	return 0;
 }
@@ -87,7 +87,7 @@ void Contrast(int value, void*)
 
 void SaturationAdjust(int value, void*)
 {
-	std::cout << "Temperature: " << Lib::CalculateColorTemperature( Lib::SaturationAdjustment(globalInput, (value)) ).val[0] << " K" << std::endl;
+	std::cout << "Temperature: " << Lib::CalculateColorTemperature( Lib::SaturationAdjustment(globalInput, (value)) ) << " K" << std::endl;
 	imshow("output window", Lib::SaturationAdjustment(globalInput, (value))); // Show our image inside it.
 }
 

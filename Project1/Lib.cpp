@@ -352,7 +352,7 @@ namespace pes {
 			return reconstructed_Image;
 		}
 
-		cv::Scalar Lib::CalculateColorTemperature(Mat src) // 0 <= value_in <= 100
+		double Lib::CalculateColorTemperature(Mat src) // 0 <= value_in <= 100
 		{
 			cv::Mat XYZ_Image;
 			cv::cvtColor(src, XYZ_Image, CV_BGR2XYZ);
@@ -364,7 +364,8 @@ namespace pes {
 			Mat n; divide(x, y, n);
 			Mat n3, n2; cv::pow(n, 3, n3); cv::pow(n, 2, n2);
 			Mat CCT = 449 * n3 + 3525 * n2 + 6823.3 * n + 5520.33;
-			return cv::mean(CCT);
+			double min, max; cv::minMaxLoc(CCT, &min, &max);
+			return (min + max) / 2;
 		}
 	}
 }

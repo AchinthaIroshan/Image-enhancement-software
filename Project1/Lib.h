@@ -42,8 +42,7 @@ namespace pes {
 			static Mat greenHistogram(Mat src);
 			static Mat blueHistogram(Mat src);
 			static Mat rgbHistogram(Mat src);
-			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
-			static cv::Scalar CalculateColorTemperature(Mat src);
+			static double CalculateColorTemperature(Mat src);
 		private:
 			Lib();
 
