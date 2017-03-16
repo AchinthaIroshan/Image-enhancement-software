@@ -24,7 +24,7 @@ namespace pes {
 
 		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
-			double value = (value_in + 100) / 100.0;
+			double value = (value_in + 100) / 150.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
@@ -64,13 +64,13 @@ namespace pes {
 			return im;
 		}
 
-		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // 0 <= value_in <=100
+		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // -100 <= value_in <=100
 		{
-			double r = r_in / 100.0, g = g_in / 100.0, b = b_in / 100.0;
+			double r = r_in / 150.0, g = g_in / 150.0, b = b_in / 150.0;
 			CV_Assert(im.type() == CV_32FC3);
-			CV_Assert(r >= 0 && r <= 1);
-			CV_Assert(g >= 0 && g <= 1);
-			CV_Assert(b >= 0 && b <= 1);
+			CV_Assert(r >= -1 && r <= 1);
+			CV_Assert(g >= -1 && g <= 1);
+			CV_Assert(b >= -1 && b <= 1);
 			Mat out;
 			Mat ch[3];
 			split(im, ch);
@@ -202,7 +202,7 @@ namespace pes {
 
 		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
 		{
-			if (_height > src.rows)
+/*			if (_height > src.rows)
 			{
 				_height = src.rows;
 			}
@@ -210,7 +210,7 @@ namespace pes {
 			if (_width > src.cols)
 			{
 				_width = src.cols;
-			}
+			}*/
 
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
@@ -225,7 +225,7 @@ namespace pes {
 			double value = (value_in) / 100.0;
 			cv::Mat HSV_Image;
 			cv::cvtColor(src, HSV_Image, CV_BGR2HSV);
-			vector<Mat> channels(3); 
+			vector<Mat> channels(3);
 			cv::split(HSV_Image, channels);
 			channels.at(1) = value + channels.at(1);
 			cv::Mat reconstructed_Image;
@@ -262,23 +262,30 @@ namespace pes {
 			bilateralFilter(src, dst, i, i * 2, i / 2);
 			return dst;
 		}
-	
-		Mat *Lib::colourHistogram(Mat src) {
+
+		Mat Lib::redHistogram(Mat src)
+		{
 			Mat bgr[3];
-			Mat blue, green, red;
-
 			split(src, bgr);
+			Mat hist = Lib::histogram(bgr[2]);
 
-			blue = bgr[0];
-			green = bgr[1];
-			red = bgr[2];
+			return hist;
+		}
 
+		Mat Lib::greenHistogram(Mat src)
+		{
+			Mat bgr[3];
+			split(src, bgr);
+			Mat hist = Lib::histogram(bgr[1]);
 
-			Mat bhist = Lib::histogram(blue);
-			Mat ghist = Lib::histogram(green);
-			Mat rhist = Lib::histogram(red);
+			return hist;
+		}
 
-			Mat hist[3] = { bhist ,ghist ,rhist };
+		Mat Lib::blueHistogram(Mat src)
+		{
+			Mat bgr[3];
+			split(src, bgr);
+			Mat hist = Lib::histogram(bgr[0]);
 
 			return hist;
 
@@ -291,10 +298,6 @@ namespace pes {
 				for (int x = 0; x < src.cols; x++) {
 					histogram[(int)src.at<uchar>(y, x)]++;
 				}
-			}
-
-			for (int i = 0; i < 255; i++) {
-				cout << histogram[i] << endl;
 			}
 
 			int hist_wd = 512;

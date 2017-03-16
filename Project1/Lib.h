@@ -31,13 +31,16 @@ namespace pes {
 			static Mat ContrastAdjustment(Mat src, int value);
 			static Mat SaturationAdjustment(Mat src, int value);
 			static Mat ExposureAdjustment(Mat src, int value);
+			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
 
 			static Mat histogram(Mat src);
 			static Mat noiseRed_NormalizedFilter(Mat src, int KernalSize);
 			static Mat noiseRed_GaussianFilter(Mat src, int KernalSize);
 			static Mat noiseRed_MedianFilter(Mat src, int KernalSize);
 			static Mat noiseRed_bilateralFilter(Mat src, int KernalSize);
-			static Mat *colourHistogram(Mat src);
+			static Mat redHistogram(Mat src);
+			static Mat greenHistogram(Mat src);
+			static Mat blueHistogram(Mat src);
 			static Mat rgbHistogram(Mat src);
 			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
 			static cv::Scalar CalculateColorTemperature(Mat src);
