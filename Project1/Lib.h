@@ -3,6 +3,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <cmath>
+#include <iostream>
 
 #define UPPER_SHADOW_LEVEL 0.24
 #define LOWER_SHADOW_LEVEL 0.05
@@ -41,6 +42,7 @@ namespace pes {
 			static Mat greenHistogram(Mat src);
 			static Mat blueHistogram(Mat src);
 			static Mat rgbHistogram(Mat src);
+			static double CalculateColorTemperature(Mat src);
 		private:
 			Lib();
 
