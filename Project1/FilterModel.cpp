@@ -12,6 +12,8 @@ namespace pes {
 			switch (functionType)
 			{
 			case 2:
+			case 4:
+			case 5:
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				break;
 			}
@@ -44,6 +46,9 @@ namespace pes {
 			switch (functionType)
 			{
 			case 0:
+			case 6:
+			case 7:
+			case 8:
 				controllerModel->label1->Text = "Value: ";
 				controllerModel->infoLabel1->Text = "";
 				controllerModel->label1TrackerBar->Minimum = -100;
@@ -61,6 +66,15 @@ namespace pes {
 				break;
 			case 2:
 				controllerModel->label1->Text = "Red: ";
+				controllerModel->infoLabel1->Text = Val[0].ToString();
+				controllerModel->label1TrackerBar->Minimum = -100;
+				controllerModel->label1TrackerBar->Maximum = 100;
+				controllerModel->label1TrackerBar->Value = variableValues[0];
+				controllerModel->Visible(1);
+				break;
+			case 4:
+			case 5:
+				controllerModel->label1->Text = "Alpha: ";
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				controllerModel->label1TrackerBar->Minimum = -100;
 				controllerModel->label1TrackerBar->Maximum = 100;
@@ -118,6 +132,18 @@ namespace pes {
 				return Lib::Vignette(im, variableValues[0]);
 			case 2:
 				return Lib::ColorBalance(im, variableValues[0], variableValues[1], variableValues[2]);
+			case 3:
+				return Lib::BrightnessAndContrastAuto(im);
+			case 4:
+				return Lib::ShadowRecovery(im, variableValues[0]);
+			case 5:
+				return Lib::HighlightRecovery(im, variableValues[0]);
+			case 6:
+				return Lib::ContrastAdjustment(im, variableValues[0]);
+			case 7:
+				return Lib::SaturationAdjustment(im, variableValues[0]);
+			case 8:
+				return Lib::ExposureAdjustment(im, variableValues[0]);
 			default:
 				return cv::Mat();
 			}
@@ -189,6 +215,18 @@ namespace pes {
 				return "Vignette";
 			case 2:
 				return "Color Balance";
+			case 3:
+				return "Auto Correction";
+			case 4:
+				return "Shadow Recovery";
+			case 5:
+				return "Highlight Recovery";
+			case 6:
+				return "Contrast Adjustment";
+			case 7:
+				return "Saturation Adjustment";
+			case 8: 
+				return "Exposure Adjustment";
 			default:
 				return "Not Implemented!!!";
 			}
@@ -212,5 +250,5 @@ namespace pes {
  * Update
  * Initialize
  * Perform Action
- * Color Balance
+ * To String
  */

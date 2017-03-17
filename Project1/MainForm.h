@@ -89,6 +89,13 @@ namespace pes {
 		private: System::Windows::Forms::Panel^  histPanel;
 		private: System::Windows::Forms::ToolStripMenuItem^  vignetteToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  colorBalanceToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  autoCorrectionToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  shadowRecoveryToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  highlightRecoveryToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  adjustContrastToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  adjustSaturationToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  adjustExposureToolStripMenuItem;
+
 
 
 
@@ -137,6 +144,13 @@ namespace pes {
 				this->addFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->adjustTempuratureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->vignetteToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->colorBalanceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->autoCorrectionToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->shadowRecoveryToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->highlightRecoveryToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->adjustContrastToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->adjustSaturationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->adjustExposureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->deleteFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->savePresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->loadPresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -144,7 +158,6 @@ namespace pes {
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
-				this->colorBalanceToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
@@ -442,9 +455,10 @@ namespace pes {
 				// 
 				// addFilterToolStripMenuItem
 				// 
-				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
+				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(9) {
 					this->adjustTempuratureToolStripMenuItem,
-						this->vignetteToolStripMenuItem, this->colorBalanceToolStripMenuItem
+						this->vignetteToolStripMenuItem, this->colorBalanceToolStripMenuItem, this->autoCorrectionToolStripMenuItem, this->shadowRecoveryToolStripMenuItem,
+						this->highlightRecoveryToolStripMenuItem, this->adjustContrastToolStripMenuItem, this->adjustSaturationToolStripMenuItem, this->adjustExposureToolStripMenuItem
 				});
 				this->addFilterToolStripMenuItem->Name = L"addFilterToolStripMenuItem";
 				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(85, 19);
@@ -463,6 +477,55 @@ namespace pes {
 				this->vignetteToolStripMenuItem->Size = System::Drawing::Size(179, 22);
 				this->vignetteToolStripMenuItem->Text = L"Vignette";
 				this->vignetteToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::vignetteToolStripMenuItem_Click);
+				// 
+				// colorBalanceToolStripMenuItem
+				// 
+				this->colorBalanceToolStripMenuItem->Name = L"colorBalanceToolStripMenuItem";
+				this->colorBalanceToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->colorBalanceToolStripMenuItem->Text = L"Color Balance";
+				this->colorBalanceToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::colorBalanceToolStripMenuItem_Click);
+				// 
+				// autoCorrectionToolStripMenuItem
+				// 
+				this->autoCorrectionToolStripMenuItem->Name = L"autoCorrectionToolStripMenuItem";
+				this->autoCorrectionToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->autoCorrectionToolStripMenuItem->Text = L"Auto Correction";
+				this->autoCorrectionToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::autoCorrectionToolStripMenuItem_Click);
+				// 
+				// shadowRecoveryToolStripMenuItem
+				// 
+				this->shadowRecoveryToolStripMenuItem->Name = L"shadowRecoveryToolStripMenuItem";
+				this->shadowRecoveryToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->shadowRecoveryToolStripMenuItem->Text = L"Shadow Recovery";
+				this->shadowRecoveryToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::shadowRecoveryToolStripMenuItem_Click);
+				// 
+				// highlightRecoveryToolStripMenuItem
+				// 
+				this->highlightRecoveryToolStripMenuItem->Name = L"highlightRecoveryToolStripMenuItem";
+				this->highlightRecoveryToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->highlightRecoveryToolStripMenuItem->Text = L"Highlight Recovery";
+				this->highlightRecoveryToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::highlightRecoveryToolStripMenuItem_Click);
+				// 
+				// adjustContrastToolStripMenuItem
+				// 
+				this->adjustContrastToolStripMenuItem->Name = L"adjustContrastToolStripMenuItem";
+				this->adjustContrastToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->adjustContrastToolStripMenuItem->Text = L"Adjust Contrast";
+				this->adjustContrastToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::adjustContrastToolStripMenuItem_Click);
+				// 
+				// adjustSaturationToolStripMenuItem
+				// 
+				this->adjustSaturationToolStripMenuItem->Name = L"adjustSaturationToolStripMenuItem";
+				this->adjustSaturationToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->adjustSaturationToolStripMenuItem->Text = L"Adjust Saturation";
+				this->adjustSaturationToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::adjustSaturationToolStripMenuItem_Click);
+				// 
+				// adjustExposureToolStripMenuItem
+				// 
+				this->adjustExposureToolStripMenuItem->Name = L"adjustExposureToolStripMenuItem";
+				this->adjustExposureToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->adjustExposureToolStripMenuItem->Text = L"Adjust Exposure";
+				this->adjustExposureToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::adjustExposureToolStripMenuItem_Click);
 				// 
 				// deleteFilterToolStripMenuItem
 				// 
@@ -512,13 +575,6 @@ namespace pes {
 				this->saveFileDialog->Filter = L"JPEG Files|*.jpg";
 				this->saveFileDialog->InitialDirectory = L"./";
 				this->saveFileDialog->Title = L"Save Image";
-				// 
-				// colorBalanceToolStripMenuItem
-				// 
-				this->colorBalanceToolStripMenuItem->Name = L"colorBalanceToolStripMenuItem";
-				this->colorBalanceToolStripMenuItem->Size = System::Drawing::Size(179, 22);
-				this->colorBalanceToolStripMenuItem->Text = L"Color Balance";
-				this->colorBalanceToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::colorBalanceToolStripMenuItem_Click);
 				// 
 				// MainForm
 				// 
@@ -576,6 +632,12 @@ private: System::Void gRadioButton_CheckedChanged(System::Object^  sender, Syste
 private: System::Void bRadioButton_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 private: System::Void vignetteToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 private: System::Void colorBalanceToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void autoCorrectionToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void shadowRecoveryToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void highlightRecoveryToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void adjustContrastToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void adjustSaturationToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void adjustExposureToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 	}
 }

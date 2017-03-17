@@ -106,6 +106,7 @@ namespace pes {
 		Mat Lib::BrightnessAndContrastAuto(Mat src, double clipHistPercent)
 		{
 			CV_Assert(clipHistPercent >= 0);
+			src.convertTo(src, CV_8UC3, 255.0);
 			CV_Assert(src.type() == CV_8UC3);
 
 			auto histSize = 256;
@@ -169,6 +170,7 @@ namespace pes {
 				int from_to[] = { 3, 3 };
 				mixChannels(&src, 4, &dst, 1, from_to, 1);
 			}
+			dst.convertTo(dst, CV_32FC3, 1.0 / 255.0);
 			return dst;
 		}
 

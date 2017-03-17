@@ -187,11 +187,6 @@ namespace pes {
 			}
 		}
 
-		System::Void MainForm::adjustTempuratureToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
-		{
-			filterList->Items->Add(gcnew FilterModel(0, 1, 0, 0));
-		}
-
 		System::Void MainForm::filterList_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			selectedModel = static_cast<FilterModel^>(filterList->SelectedItem);
@@ -247,13 +242,50 @@ namespace pes {
 		{
 			if (im2.data) DrawHist(im2);
 		}
+
+		System::Void MainForm::adjustTempuratureToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(0, 0, 0, 0));
+			performFiltering();
+		}
 		System::Void MainForm::vignetteToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			filterList->Items->Add(gcnew FilterModel(1, 0, 0, 0));
+			performFiltering();
 		}
 		System::Void MainForm::colorBalanceToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			filterList->Items->Add(gcnew FilterModel(2, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::autoCorrectionToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(3, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::shadowRecoveryToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(4, 0, 0, 0));
+		}
+		System::Void MainForm::highlightRecoveryToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(5, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::adjustContrastToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(6, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::adjustSaturationToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(7, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::adjustExposureToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(8, 0, 0, 0));
+			performFiltering();
 		}
 	}
 }
