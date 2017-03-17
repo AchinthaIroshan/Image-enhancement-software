@@ -14,6 +14,10 @@ namespace pes {
 			case 2:
 			case 4:
 			case 5:
+			case 6:
+			case 7:
+			case 8:
+			case 9:
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				break;
 			}
@@ -46,9 +50,6 @@ namespace pes {
 			switch (functionType)
 			{
 			case 0:
-			case 6:
-			case 7:
-			case 8:
 				controllerModel->label1->Text = "Value: ";
 				controllerModel->infoLabel1->Text = "";
 				controllerModel->label1TrackerBar->Minimum = -100;
@@ -75,6 +76,17 @@ namespace pes {
 			case 4:
 			case 5:
 				controllerModel->label1->Text = "Alpha: ";
+				controllerModel->infoLabel1->Text = Val[0].ToString();
+				controllerModel->label1TrackerBar->Minimum = -100;
+				controllerModel->label1TrackerBar->Maximum = 100;
+				controllerModel->label1TrackerBar->Value = variableValues[0];
+				controllerModel->Visible(1);
+				break;
+			case 6:
+			case 7:
+			case 8:
+			case 9:
+				controllerModel->label1->Text = "Value: ";
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				controllerModel->label1TrackerBar->Minimum = -100;
 				controllerModel->label1TrackerBar->Maximum = 100;
@@ -144,6 +156,8 @@ namespace pes {
 				return Lib::SaturationAdjustment(im, variableValues[0]);
 			case 8:
 				return Lib::ExposureAdjustment(im, variableValues[0]);
+			case 9:
+				return Lib::GetSharpenImage(im, variableValues[0]);
 			default:
 				return cv::Mat();
 			}
@@ -227,9 +241,16 @@ namespace pes {
 				return "Saturation Adjustment";
 			case 8: 
 				return "Exposure Adjustment";
+			case 9:
+				return "Sharpeness Adjustment";
 			default:
 				return "Not Implemented!!!";
 			}
+		}
+
+		System::String ^ FilterModel::GenerateString()
+		{
+			return functionType.ToString() + ";" + variableValues[0] + ";" + variableValues[1] + ";" + variableValues[2];
 		}
 
 		int FilterModel::Val::get(int index)

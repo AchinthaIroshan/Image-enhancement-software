@@ -34,6 +34,7 @@ namespace pes {
 			System::Void UpdateView(ControllerModel^ controllerModel, int index);
 			System::Void InitializeView(ControllerModel^ controllerModel, int index);
 			virtual System::String^ ToString() override;
+			System::String^ GenerateString();
 
 		};
 

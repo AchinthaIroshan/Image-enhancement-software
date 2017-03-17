@@ -14,7 +14,7 @@ namespace pes {
 
 		Mat Lib::GetSharpenImage(Mat im, int value_in, float sigma) // -100 <= value_in <=100
 		{
-			double value = (value_in - 100) / 50.0;
+			double value = value_in / 100.0;
 			CV_Assert(im.type() == CV_32FC3);
 			Mat out;
 			GaussianBlur(im, out, Size(0, 0), sigma, sigma);
@@ -24,7 +24,7 @@ namespace pes {
 
 		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
-			double value = (value_in + 100) / 150.0;
+			double value = value_in/170.0 + 1.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
@@ -66,7 +66,7 @@ namespace pes {
 
 		Mat Lib::ColorBalance(Mat im, int r_in, int g_in, int b_in) // -100 <= value_in <=100
 		{
-			double r = r_in / 150.0, g = g_in / 150.0, b = b_in / 150.0;
+			double r = r_in / 180.0, g = g_in / 180.0, b = b_in / 180.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(r >= -1 && r <= 1);
 			CV_Assert(g >= -1 && g <= 1);

@@ -119,6 +119,18 @@ namespace pes {
 			}
 		}
 
+		System::Void MainForm::saveButton_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			Mat im_;
+			im2.convertTo(im_, CV_8UC3, 255.0);
+			saveFileDialog->ShowDialog();
+			if (saveFileDialog->FileName != "")
+			{
+				imwrite(msclr::interop::marshal_as<std::string>(saveFileDialog->FileName), im_);
+				MessageBox::Show(this, "Image saved!!", "Save Image - PES", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+		}
+
 
 		System::Void MainForm::originalImageCheckBox_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
@@ -190,7 +202,7 @@ namespace pes {
 		System::Void MainForm::filterList_SelectedIndexChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			selectedModel = static_cast<FilterModel^>(filterList->SelectedItem);
-			selectedModel->InitializeView(controllerModel, 0);
+			if(selectedModel) selectedModel->InitializeView(controllerModel, 0);
 		}
 
 		System::Void MainForm::label1TrackBar_Scroll(System::Object ^ sender, System::EventArgs ^ e)
@@ -266,6 +278,7 @@ namespace pes {
 		System::Void MainForm::shadowRecoveryToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			filterList->Items->Add(gcnew FilterModel(4, 0, 0, 0));
+			performFiltering();
 		}
 		System::Void MainForm::highlightRecoveryToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
@@ -285,6 +298,18 @@ namespace pes {
 		System::Void MainForm::adjustExposureToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
 		{
 			filterList->Items->Add(gcnew FilterModel(8, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::sharpenToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(9, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::deleteFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			int x = filterList->SelectedIndex;
+			if (x < 0) return;
+			filterList->Items->RemoveAt(x);
 			performFiltering();
 		}
 	}
