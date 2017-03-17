@@ -30,7 +30,7 @@ namespace pes {
 
 			FilterModel(int functionType, int var1, int var2, int var3);
 			cv::Mat PerformAction(cv::Mat im);
-			FilterModel^ FormatObject(System::String^ label);
+			static FilterModel^ FormatObject(System::String^ label);
 			System::Void UpdateView(ControllerModel^ controllerModel, int index);
 			System::Void InitializeView(ControllerModel^ controllerModel, int index);
 			virtual System::String^ ToString() override;

@@ -159,13 +159,13 @@ namespace pes {
 				this->deleteFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->savePresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->loadPresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->showMetaDataToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->panel1 = (gcnew System::Windows::Forms::Panel());
 				this->saveButton = (gcnew System::Windows::Forms::Button());
 				this->openFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->saveFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
 				this->openPresetFileDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 				this->savePresetFileDialog = (gcnew System::Windows::Forms::SaveFileDialog());
-				this->showMetaDataToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pictureBox))->BeginInit();
 				this->groupBox1->SuspendLayout();
 				(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->splitContainer1))->BeginInit();
@@ -556,12 +556,20 @@ namespace pes {
 				this->savePresetToolStripMenuItem->Name = L"savePresetToolStripMenuItem";
 				this->savePresetToolStripMenuItem->Size = System::Drawing::Size(98, 19);
 				this->savePresetToolStripMenuItem->Text = L"Save Preset";
+				this->savePresetToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::savePresetToolStripMenuItem_Click);
 				// 
 				// loadPresetToolStripMenuItem
 				// 
 				this->loadPresetToolStripMenuItem->Name = L"loadPresetToolStripMenuItem";
 				this->loadPresetToolStripMenuItem->Size = System::Drawing::Size(98, 19);
 				this->loadPresetToolStripMenuItem->Text = L"Load Preset";
+				this->loadPresetToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::loadPresetToolStripMenuItem_Click);
+				// 
+				// showMetaDataToolStripMenuItem
+				// 
+				this->showMetaDataToolStripMenuItem->Name = L"showMetaDataToolStripMenuItem";
+				this->showMetaDataToolStripMenuItem->Size = System::Drawing::Size(98, 19);
+				this->showMetaDataToolStripMenuItem->Text = L"Show Meta Data";
 				// 
 				// panel1
 				// 
@@ -607,12 +615,6 @@ namespace pes {
 				this->savePresetFileDialog->InitialDirectory = L"./";
 				this->savePresetFileDialog->Title = L"Save Preset File";
 				// 
-				// showMetaDataToolStripMenuItem
-				// 
-				this->showMetaDataToolStripMenuItem->Name = L"showMetaDataToolStripMenuItem";
-				this->showMetaDataToolStripMenuItem->Size = System::Drawing::Size(98, 19);
-				this->showMetaDataToolStripMenuItem->Text = L"Show Meta Data";
-				// 
 				// MainForm
 				// 
 				this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -652,6 +654,8 @@ namespace pes {
 		private: System::Void DrawHist(const cv::Mat cvImage);
 		private: System::Void openButton_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void saveButton_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void savePresetToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void loadPresetToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void originalImageCheckBox_CheckedChanged(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void cropImageToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void pictureBox_MouseDown(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e);

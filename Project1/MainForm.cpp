@@ -131,6 +131,47 @@ namespace pes {
 			}
 		}
 
+		System::Void MainForm::savePresetToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			savePresetFileDialog->ShowDialog();
+			if (savePresetFileDialog->FileName != "")
+			{
+				System::IO::StreamWriter^ sw = gcnew System::IO::StreamWriter(savePresetFileDialog->FileName);
+				for each(Object ^ obj in filterList->Items)
+				{
+					sw->WriteLine((static_cast<FilterModel ^>(obj))->GenerateString());
+				}
+				sw->Close();
+				MessageBox::Show(this, "Preset saved!!", "Save Preset - PES", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+		}
+
+		System::Void MainForm::loadPresetToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (openPresetFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+			{
+				try
+				{
+					System::IO::StreamReader^ din = System::IO::File::OpenText(openPresetFileDialog->FileName);
+					filterList->Items->Clear();
+					System::String^ str;
+					int count = 0;
+					while ((str = din->ReadLine()) != nullptr)
+					{
+						filterList->Items->Add(FilterModel::FormatObject(str));
+					}
+					performFiltering();
+				}
+				catch (System::Exception^ e)
+				{
+					if (dynamic_cast<System::IO::FileNotFoundException^>(e))
+						MessageBox::Show(this, "File Not Found!!", "Open Image - PES", MessageBoxButtons::OK, MessageBoxIcon::Error);
+					else
+						MessageBox::Show(this, "Problem reading the file!!", "Open Image - PES", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				}
+			}
+		}
+
 
 		System::Void MainForm::originalImageCheckBox_CheckedChanged(System::Object ^ sender, System::EventArgs ^ e)
 		{
