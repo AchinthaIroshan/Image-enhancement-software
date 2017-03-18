@@ -43,6 +43,7 @@ namespace pes {
 			static Mat blueHistogram(Mat src);
 			static Mat rgbHistogram(Mat src);
 			static double CalculateColorTemperature(Mat src);
+			static System::String^ metaData(System::String^ address);
 		private:
 			Lib();
 
