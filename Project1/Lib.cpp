@@ -369,6 +369,46 @@ namespace pes {
 			double min, max; cv::minMaxLoc(CCT, &min, &max);
 			return (min + max) / 2;
 		}
+
+		System::String^ metaData(System::String^ address) {
+
+			System::Drawing::Image^ image = gcnew System::Drawing::Bitmap(address);
+
+			cli::array<System::Drawing::Imaging::PropertyItem^>^ propItems = image->PropertyItems;
+
+
+			int count = 0;
+
+			System::Collections::IEnumerator^ pEnum = propItems->GetEnumerator();
+
+			System::String^ metaData = "Meta data of the image \n";
+
+			while (pEnum->MoveNext()) {
+
+				System::Drawing::Imaging::PropertyItem^ propItem = safe_cast<System::Drawing::Imaging::PropertyItem^>(pEnum->Current);
+
+
+				System::String^ propItemNum = System::String::Format("Property Item {0} \n", count);
+
+				metaData = System::String::Concat(metaData, propItemNum);
+
+				System::String^ propID = System::String::Format("   ID: 0x{0} \n", propItem->Id.ToString("x"));
+
+				metaData = System::String::Concat(metaData, propID);
+
+				System::String^ proptype = System::String::Format("   type: {0} \n", propItem->Type);
+				metaData = System::String::Concat(metaData, proptype);
+
+				System::String^ proplength = System::String::Format("   length: {0} bytes \n", propItem->Len);
+
+				metaData = System::String::Concat(metaData, proplength);
+
+				count += 1;
+
+			}
+			return metaData;
+
+		}
 	}
 }
 
