@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Lib.h"
 #include "FilterModel.h"
+#include "MetaDataForm.h"
 
 namespace pes {
 	namespace view {
@@ -108,6 +109,7 @@ namespace pes {
 		{
 			if (openFileDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 			{
+				openedFilePath = openFileDialog->FileName;
 				im = imread(msclr::interop::marshal_as<std::string>(openFileDialog->FileName), IMREAD_COLOR);
 				if (!im.data) // Check for invalid input
 				{
@@ -372,6 +374,14 @@ namespace pes {
 		{
 			filterList->Items->Add(gcnew FilterModel(13, 0, 0, 0));
 			performFiltering();
+		}
+		System::Void MainForm::showMetaDataToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			if (openedFilePath) {
+				MetaDataForm^ metaDataForm = gcnew MetaDataForm;
+				metaDataForm->showMetaData(Lib::metaData(openedFilePath));
+				metaDataForm->ShowDialog();
+			}
 		}
 	}
 }

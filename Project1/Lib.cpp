@@ -370,7 +370,7 @@ namespace pes {
 			return (min + max) / 2;
 		}
 
-		System::String^ metaData(System::String^ address) {
+		System::String^ Lib::metaData(System::String^ address) {
 
 			System::Drawing::Image^ image = gcnew System::Drawing::Bitmap(address);
 

@@ -39,6 +39,9 @@
     <ClCompile Include="FilterModel.cpp">
       <Filter>Source Files\model</Filter>
     </ClCompile>
+    <ClCompile Include="MetaDataForm.cpp">
+      <Filter>Source Files\view</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lib.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="FilterModel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaDataForm.h">
+      <Filter>Source Files\view</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

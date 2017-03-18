@@ -77,6 +77,7 @@ namespace pes {
 		private: System::Drawing::Point^ cropStart;
 		private: System::Drawing::Point^ currentMouse;
 		private: pes::model::FilterModel^ selectedModel;
+		private: System::String^ openedFilePath;
 		private: System::Windows::Forms::ToolStripMenuItem^  cropImageToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  savePresetToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  loadPresetToolStripMenuItem;
@@ -104,10 +105,6 @@ namespace pes {
 		private: System::Windows::Forms::ToolStripMenuItem^  gaussianFilterToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  medianFilterToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  bilateralFilterToolStripMenuItem;
-
-
-
-
 
 
 		protected:
@@ -619,6 +616,7 @@ namespace pes {
 				this->showMetaDataToolStripMenuItem->Name = L"showMetaDataToolStripMenuItem";
 				this->showMetaDataToolStripMenuItem->Size = System::Drawing::Size(98, 19);
 				this->showMetaDataToolStripMenuItem->Text = L"Show Meta Data";
+				this->showMetaDataToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::showMetaDataToolStripMenuItem_Click);
 				// 
 				// panel1
 				// 
@@ -735,6 +733,7 @@ namespace pes {
 		private: System::Void gaussianFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void medianFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void bilateralFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-		};
+		private: System::Void showMetaDataToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+};
 	}
 }
