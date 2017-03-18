@@ -353,5 +353,25 @@ namespace pes {
 			filterList->Items->RemoveAt(x);
 			performFiltering();
 		}
+		System::Void MainForm::normalizedFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(10, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::gaussianFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(11, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::medianFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(12, 0, 0, 0));
+			performFiltering();
+		}
+		System::Void MainForm::bilateralFilterToolStripMenuItem_Click(System::Object ^ sender, System::EventArgs ^ e)
+		{
+			filterList->Items->Add(gcnew FilterModel(13, 0, 0, 0));
+			performFiltering();
+		}
 	}
 }

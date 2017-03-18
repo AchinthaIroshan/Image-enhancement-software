@@ -99,6 +99,12 @@ namespace pes {
 		private: System::Windows::Forms::SaveFileDialog^  savePresetFileDialog;
 		private: System::Windows::Forms::ToolStripMenuItem^  sharpenToolStripMenuItem;
 		private: System::Windows::Forms::ToolStripMenuItem^  showMetaDataToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  noiseFilterToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  normalizedFilterToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  gaussianFilterToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  medianFilterToolStripMenuItem;
+		private: System::Windows::Forms::ToolStripMenuItem^  bilateralFilterToolStripMenuItem;
+
 
 
 
@@ -156,6 +162,11 @@ namespace pes {
 				this->adjustSaturationToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->adjustExposureToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->sharpenToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->noiseFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->normalizedFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->gaussianFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->medianFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+				this->bilateralFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->deleteFilterToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->savePresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 				this->loadPresetToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -464,11 +475,11 @@ namespace pes {
 				// 
 				// addFilterToolStripMenuItem
 				// 
-				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(10) {
+				this->addFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(11) {
 					this->adjustTempuratureToolStripMenuItem,
 						this->vignetteToolStripMenuItem, this->colorBalanceToolStripMenuItem, this->autoCorrectionToolStripMenuItem, this->shadowRecoveryToolStripMenuItem,
 						this->highlightRecoveryToolStripMenuItem, this->adjustContrastToolStripMenuItem, this->adjustSaturationToolStripMenuItem, this->adjustExposureToolStripMenuItem,
-						this->sharpenToolStripMenuItem
+						this->sharpenToolStripMenuItem, this->noiseFilterToolStripMenuItem
 				});
 				this->addFilterToolStripMenuItem->Name = L"addFilterToolStripMenuItem";
 				this->addFilterToolStripMenuItem->Size = System::Drawing::Size(98, 19);
@@ -543,6 +554,44 @@ namespace pes {
 				this->sharpenToolStripMenuItem->Size = System::Drawing::Size(179, 22);
 				this->sharpenToolStripMenuItem->Text = L"Sharpen";
 				this->sharpenToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::sharpenToolStripMenuItem_Click);
+				// 
+				// noiseFilterToolStripMenuItem
+				// 
+				this->noiseFilterToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(4) {
+					this->normalizedFilterToolStripMenuItem,
+						this->gaussianFilterToolStripMenuItem, this->medianFilterToolStripMenuItem, this->bilateralFilterToolStripMenuItem
+				});
+				this->noiseFilterToolStripMenuItem->Name = L"noiseFilterToolStripMenuItem";
+				this->noiseFilterToolStripMenuItem->Size = System::Drawing::Size(179, 22);
+				this->noiseFilterToolStripMenuItem->Text = L"Noise Filter";
+				// 
+				// normalizedFilterToolStripMenuItem
+				// 
+				this->normalizedFilterToolStripMenuItem->Name = L"normalizedFilterToolStripMenuItem";
+				this->normalizedFilterToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+				this->normalizedFilterToolStripMenuItem->Text = L"Normalized Filter";
+				this->normalizedFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::normalizedFilterToolStripMenuItem_Click);
+				// 
+				// gaussianFilterToolStripMenuItem
+				// 
+				this->gaussianFilterToolStripMenuItem->Name = L"gaussianFilterToolStripMenuItem";
+				this->gaussianFilterToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+				this->gaussianFilterToolStripMenuItem->Text = L"Gaussian Filter";
+				this->gaussianFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::gaussianFilterToolStripMenuItem_Click);
+				// 
+				// medianFilterToolStripMenuItem
+				// 
+				this->medianFilterToolStripMenuItem->Name = L"medianFilterToolStripMenuItem";
+				this->medianFilterToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+				this->medianFilterToolStripMenuItem->Text = L"Median Filter";
+				this->medianFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::medianFilterToolStripMenuItem_Click);
+				// 
+				// bilateralFilterToolStripMenuItem
+				// 
+				this->bilateralFilterToolStripMenuItem->Name = L"bilateralFilterToolStripMenuItem";
+				this->bilateralFilterToolStripMenuItem->Size = System::Drawing::Size(164, 22);
+				this->bilateralFilterToolStripMenuItem->Text = L"Bilateral Filter";
+				this->bilateralFilterToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainForm::bilateralFilterToolStripMenuItem_Click);
 				// 
 				// deleteFilterToolStripMenuItem
 				// 
@@ -682,6 +731,10 @@ namespace pes {
 		private: System::Void adjustExposureToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void sharpenToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		private: System::Void deleteFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void normalizedFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void gaussianFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void medianFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+		private: System::Void bilateralFilterToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 		};
 	}
 }

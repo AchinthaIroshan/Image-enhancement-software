@@ -11,6 +11,9 @@ namespace pes {
 			Val[0] = controllerModel->label1TrackerBar->Value;
 			switch (functionType)
 			{
+			case 0:
+				controllerModel->infoLabel1->Text = "Temperature: " + temp1.ToString();
+				break;
 			case 2:
 			case 4:
 			case 5:
@@ -18,6 +21,10 @@ namespace pes {
 			case 7:
 			case 8:
 			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				break;
 			}
@@ -51,7 +58,7 @@ namespace pes {
 			{
 			case 0:
 				controllerModel->label1->Text = "Value: ";
-				controllerModel->infoLabel1->Text = "";
+				controllerModel->infoLabel1->Text = "Temperature: " + temp1.ToString();
 				controllerModel->label1TrackerBar->Minimum = -100;
 				controllerModel->label1TrackerBar->Maximum = 100;
 				controllerModel->label1TrackerBar->Value = variableValues[0];
@@ -89,6 +96,17 @@ namespace pes {
 				controllerModel->label1->Text = "Value: ";
 				controllerModel->infoLabel1->Text = Val[0].ToString();
 				controllerModel->label1TrackerBar->Minimum = -100;
+				controllerModel->label1TrackerBar->Maximum = 100;
+				controllerModel->label1TrackerBar->Value = variableValues[0];
+				controllerModel->Visible(1);
+				break;
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+				controllerModel->label1->Text = "Value: ";
+				controllerModel->infoLabel1->Text = Val[0].ToString();
+				controllerModel->label1TrackerBar->Minimum = 0;
 				controllerModel->label1TrackerBar->Maximum = 100;
 				controllerModel->label1TrackerBar->Value = variableValues[0];
 				controllerModel->Visible(1);
@@ -136,10 +154,13 @@ namespace pes {
 
 		cv::Mat FilterModel::PerformAction(cv::Mat im)
 		{
+			Mat out;
 			switch (functionType)
 			{
 			case 0:
-				return Lib::AdjustTemperature(im, variableValues[0]);
+				out = Lib::AdjustTemperature(im, variableValues[0]);
+				temp1 = Lib::CalculateColorTemperature(out);
+				return out;
 			case 1:
 				return Lib::Vignette(im, variableValues[0]);
 			case 2:
@@ -158,6 +179,14 @@ namespace pes {
 				return Lib::ExposureAdjustment(im, variableValues[0]);
 			case 9:
 				return Lib::GetSharpenImage(im, variableValues[0]);
+			case 10:
+				return Lib::noiseRed_NormalizedFilter(im, variableValues[0]);
+			case 11:
+				return Lib::noiseRed_GaussianFilter(im, variableValues[0]);
+			case 12:
+				return Lib::noiseRed_MedianFilter(im, variableValues[0]);
+			case 13:
+				return Lib::noiseRed_bilateralFilter(im, variableValues[0]);
 			default:
 				return cv::Mat();
 			}
@@ -243,6 +272,14 @@ namespace pes {
 				return "Exposure Adjustment";
 			case 9:
 				return "Sharpeness Adjustment";
+			case 10:
+				return "Normalize Filter";
+			case 11:
+				return "Gaussian Filter";
+			case 12:
+				return "Median Filter";
+			case 13:
+				return "Bilateral Filter";
 			default:
 				return "Not Implemented!!!";
 			}

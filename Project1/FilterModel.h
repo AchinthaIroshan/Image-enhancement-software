@@ -13,6 +13,7 @@ namespace pes {
 		{
 		private:
 			int functionType;
+			double temp1;
 			cli::array<int>^ variableValues = gcnew cli::array<int>(3);
 			System::Void Update1(ControllerModel^ controllerModel);
 			System::Void Update2(ControllerModel^ controllerModel);

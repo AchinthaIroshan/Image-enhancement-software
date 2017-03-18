@@ -24,7 +24,7 @@ namespace pes {
 
 		Mat Lib::AdjustTemperature(Mat im, int value_in) // -100 <= value_in <=100
 		{
-			double value = value_in/170.0 + 1.0;
+			double value = value_in / 170.0 + 1.0;
 			CV_Assert(im.type() == CV_32FC3);
 			CV_Assert(value >= 0 && value <= 2);
 			Mat out;
@@ -176,7 +176,7 @@ namespace pes {
 
 		Mat Lib::ShadowRecovery(Mat input_image, int value_in) // - 100 <= value_in <= 100
 		{
-			double alpha = (value_in ) / 100.0;
+			double alpha = (value_in) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -190,7 +190,7 @@ namespace pes {
 
 		Mat Lib::HighlightRecovery(Mat input_image, int value_in)  // - 100 <= value_in <= 100
 		{
-			double alpha = (value_in ) / 100.0;
+			double alpha = (value_in) / 100.0;
 			Mat modifier;
 			cvtColor(input_image, modifier, CV_BGR2GRAY);  // Take Gray image
 			Mat thresholdedImageUp;
@@ -204,22 +204,22 @@ namespace pes {
 
 		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
 		{
-/*			if (_height > src.rows)
-			{
-				_height = src.rows;
-			}
+			/*			if (_height > src.rows)
+						{
+							_height = src.rows;
+						}
 
-			if (_width > src.cols)
-			{
-				_width = src.cols;
-			}*/
+						if (_width > src.cols)
+						{
+							_width = src.cols;
+						}*/
 
 			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
 		}
 
 		Mat Lib::ContrastAdjustment(Mat src, int value_in) // -100 <= value_in <= 100
 		{
-			return ((value_in + 100 ) / 100.0) * src;
+			return ((value_in + 100) / 100.0) * src;
 		}
 
 		Mat Lib::SaturationAdjustment(Mat src, int value_in) // - 100 <= value_in <= 100
@@ -238,14 +238,14 @@ namespace pes {
 
 		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
 			Mat dst;
-			int i = KernalSize;
+			int i = KernalSize/15 + 1;
 			blur(src, dst, Size(i, i), Point(-1, -1));
 			return dst;
 		}
 
 		Mat Lib::noiseRed_GaussianFilter(Mat src, int KernalSize) {
 			Mat dst;
-			int i = KernalSize;
+			int i = 2 * (KernalSize / 30) + 1;
 			GaussianBlur(src, dst, Size(i, i), 0, 0);
 			//sigma x and y : Writing 0 implies that sigma x and y is calculated using kernel size
 			return dst;
@@ -253,14 +253,14 @@ namespace pes {
 
 		Mat Lib::noiseRed_MedianFilter(Mat src, int KernalSize) {
 			Mat dst;
-			int i = KernalSize;
+			int i = 2 * (KernalSize / 30) + 3;
 			medianBlur(src, dst, i);
 			return dst;
 		}
 
 		Mat Lib::noiseRed_bilateralFilter(Mat src, int KernalSize) {
 			Mat dst;
-			int i = KernalSize;
+			double i = KernalSize / 15.0 + 1.0;
 			bilateralFilter(src, dst, i, i * 2, i / 2);
 			return dst;
 		}
@@ -311,7 +311,7 @@ namespace pes {
 
 			int max = histogram[0];
 
-			for (int i = 0; i<255; i++) {
+			for (int i = 0; i < 255; i++) {
 				if (histogram[i] > max) {
 					max = histogram[i];
 				}
@@ -319,7 +319,7 @@ namespace pes {
 
 			//normalize the histogrm values from 0 to number of rows
 
-			for (int i = 0; i<255; i++) {
+			for (int i = 0; i < 255; i++) {
 				histogram[i] = ((double)histogram[i] / max)*src.rows;
 			}
 
