@@ -36,8 +36,11 @@ namespace pes {
 			}
 			
 			// Create System::Drawing::Bitmap from cv::Mat
+			int bitsPerPixel = 24;// ((int)System::Drawing::Imaging::PixelFormat::Format24bppRgb & 0xff00) >> 8;
+			int bytesPerPixel = (bitsPerPixel + 7) / 8;
+			int stride = 4 * ((cvImage.cols * bytesPerPixel + 3) / 4);
 			System::Drawing::Bitmap^ bmpImage = gcnew Bitmap(
-				cvImage.cols, cvImage.rows, cvImage.step,
+				cvImage.cols, cvImage.rows, stride,
 				System::Drawing::Imaging::PixelFormat::Format24bppRgb,
 				System::IntPtr(cvImage.data)
 			);
@@ -217,8 +220,10 @@ namespace pes {
 			if (cropImageToolStripMenuItem->BackColor == SystemColors::ControlDark && isDragging) {
 				isDragging = false;
 				cropImageToolStripMenuItem_Click(nullptr, nullptr);
+				cout << "Rw: " << im2.rows << ", Cl: " << im2.cols << ", Stp: " << im2.step << ", Typ: " << im2.type() << endl;
 				cout << "Strt: " << cv::Point(cropStart->X, cropStart->Y) << "\tEND: " << cv::Point(currentMouse->X, currentMouse->Y) << "\t\tX: " << Math::Abs(currentMouse->X - cropStart->X) << "\tY: " << Math::Abs(currentMouse->Y - cropStart->Y) << endl;
 				im2 = Lib::Crop(im2, cv::Point(cropStart->X, cropStart->Y), Math::Abs(currentMouse->X - cropStart->X), Math::Abs(currentMouse->Y - cropStart->Y));
+				cout << "Rw: " << im2.rows << ", Cl: " << im2.cols << ", Stp: " << im2.step << ", Typ: " << im2.type() << endl;
 				DrawCvImage(im2.clone());
 			}
 		}

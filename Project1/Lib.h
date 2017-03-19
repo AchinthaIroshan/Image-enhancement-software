@@ -31,7 +31,7 @@ namespace pes {
 			static Mat ContrastAdjustment(Mat src, int value);
 			static Mat SaturationAdjustment(Mat src, int value);
 			static Mat ExposureAdjustment(Mat src, int value);
-			static Mat Crop(Mat src, cv::Point topLeft, double _height, double _width);
+			static Mat Crop(Mat src, cv::Point topLeft, double _width, double _height);
 
 			static Mat histogram(Mat src);
 			static Mat noiseRed_NormalizedFilter(Mat src, int KernalSize);

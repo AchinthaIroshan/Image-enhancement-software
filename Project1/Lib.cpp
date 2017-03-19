@@ -202,19 +202,19 @@ namespace pes {
 			return (input_image + alpha * tripleChannelAdder);
 		}
 
-		Mat Lib::Crop(Mat src, cv::Point topLeft, double _height, double _width)
+		Mat Lib::Crop(Mat src, cv::Point topLeft, double _width, double _height)
 		{
-			/*			if (_height > src.rows)
-						{
-							_height = src.rows;
-						}
+			if (_height + topLeft.y > src.rows)
+			{
+				_height = src.rows - topLeft.y - 1;
+			}
 
-						if (_width > src.cols)
-						{
-							_width = src.cols;
-						}*/
+			if (_width + topLeft.x > src.cols)
+			{
+				_width = src.cols - topLeft.x - 1;
+			}
 
-			return src(cv::Rect(topLeft, cv::Size(_height, _width)));
+			return src(cv::Rect(topLeft, cv::Size(_width, _height)));
 		}
 
 		Mat Lib::ContrastAdjustment(Mat src, int value_in) // -100 <= value_in <= 100
@@ -238,7 +238,7 @@ namespace pes {
 
 		Mat Lib::noiseRed_NormalizedFilter(Mat src, int KernalSize) {
 			Mat dst;
-			int i = KernalSize/15 + 1;
+			int i = KernalSize / 15 + 1;
 			blur(src, dst, Size(i, i), Point(-1, -1));
 			return dst;
 		}
